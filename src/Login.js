@@ -5,7 +5,8 @@ import './main.css';
 import { useNavigate } from 'react-router-dom';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import axios from 'axios/dist/browser/axios.cjs';
+//import axios from 'axios/dist/browser/axios.cjs';
+import axios from 'axios';
 
 const LoginComponent = (probs) => {
   const [username, setUsername] = useState('');

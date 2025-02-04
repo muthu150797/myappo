@@ -10,7 +10,6 @@ import MyComponent from './MyComponent.jsx';
 import LoginComponent from './Login.js';
 import Home from './Home';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import {
   BrowserRouter,

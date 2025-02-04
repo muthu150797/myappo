@@ -5,6 +5,7 @@ import './style.scss';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 // import 'bootstrap-icons/font/bootstrap-icons.css';
 // import 'bootstrap'
@@ -14,6 +15,8 @@ const Dashboard = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const location = useLocation();
   let isFirstLoad = true;
+  const navigate = useNavigate();
+  
   // Access current URL components
   const { pathname, search, hash } = location;
   const currentUrl = `${pathname}${search}${hash}`;
@@ -35,6 +38,7 @@ const Dashboard = () => {
   };
   // Step 3: Update state on button click
   useEffect(() => {
+   
     const index = '/dashboard';
     const regex = new RegExp(`\\b${pathname}\\b`, 'i'); // 'i' for case-insensitive search
     const match = index.match(regex);
@@ -55,6 +59,8 @@ const Dashboard = () => {
 
   const logout = () => {
     setToken('');
+    localStorage.removeItem('token') 
+    navigate('/');
   };
   const toggle = () => {
     if (document.getElementById('mySidebar').style.width == '0px') {
@@ -96,7 +102,10 @@ const Dashboard = () => {
           <a
             style={{ float: 'right', padding: '20px' }}
             href="#"
-            onClick={logout}
+            onClick={(e) => {
+              e.preventDefault();
+              logout();
+            }}
           >
             <span class="glyphicon glyphicon-off"></span>
           </a>
