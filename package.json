@@ -4,15 +4,19 @@
   "private": true,
   "dependencies": {
     "axios": "latest",
+    "bootstrap": "^5.3.3",
     "debug": "4.4.0",
     "events": "3.3.0",
     "https": "^1.0.0",
+    "npm": "^11.1.0",
     "prismjs": "1.29.0",
     "react": "latest",
+    "react-bootstrap": "^2.10.9",
     "react-dom": "latest",
     "react-router-dom": "6.15.0",
     "react-simple-code-editor": "0.14.1",
     "react-toastify": "^11.0.3",
+    "start": "^5.1.0",
     "zlib": "^1.0.5"
   },
   "scripts": {
