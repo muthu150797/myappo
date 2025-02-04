@@ -24,7 +24,8 @@ import PrivateRoute from './PrivateRoute.js';
 const Profile = () => <h2>Profile Page</h2>;
 const Settings = () => <h2>Settings Page</h2>;
 const Welcome = () => <h2>Welcome</h2>;
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default function App() {
   const [isLogin, Login] = useState(false);
   const [code, setCode] = useState(`function Test () { return "hello"}`);
@@ -36,7 +37,9 @@ export default function App() {
   //   <div>{token ? <Dashboard /> : <LoginComponent username="muthu" />}</div>
   // );
   return (
+
     <div class="App">
+            <ToastContainer />
       <Routes>
         <Route path="/" element={<LoginComponent />} />
         <Route

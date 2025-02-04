@@ -7,6 +7,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 //import axios from 'axios/dist/browser/axios.cjs';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const LoginComponent = (probs) => {
   const [username, setUsername] = useState('');
@@ -14,6 +15,18 @@ const LoginComponent = (probs) => {
   //const { token, setToken } = useToken();
   const navigate = useNavigate();
   const [token, setToken] = useState(() => localStorage.getItem('token'));
+
+  const showErrorToast = (message) => {
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
 
   //const history = useNavigate ();
   useEffect(() => {
@@ -28,12 +41,12 @@ const LoginComponent = (probs) => {
     console.log('userss', userData);
     if (userData.status == 200) {
       console.log('userData', userData.data);
-      localStorage.setItem('token', 'safdfsdaf');
+      localStorage.setItem('token', userData.data.mail);
+      setToken(userData.data.mail)
       navigate('/dashboard');
     } else {
-      alert(userData.data.message);
+      showErrorToast(userData.data.message);
     }
-    // useNavigate("/dashboard");
   };
   const postData = async () => {
     const url = 'https://newapi-5y5y.onrender.com/api/login';
