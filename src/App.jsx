@@ -26,6 +26,7 @@ const Settings = () => <h2>Settings Page</h2>;
 const Welcome = () => <h2>Welcome</h2>;
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Layout from './Layout.jsx';
 export default function App() {
   const [isLogin, Login] = useState(false);
   const [code, setCode] = useState(`function Test () { return "hello"}`);
@@ -42,6 +43,20 @@ export default function App() {
             <ToastContainer />
       <Routes>
         <Route path="/" element={<LoginComponent />} />
+        {/* <Route path="/layout" element={<Layout />} /> */}
+        <Route
+          path="/layout"
+          element={
+            <PrivateRoute>
+              <Layout />
+            </PrivateRoute>
+          }
+        >
+          <Route index element={<Welcome />} /> {/* Default route */}
+          <Route path="home" element={<Home />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
         <Route
           path="/dashboard"
           element={

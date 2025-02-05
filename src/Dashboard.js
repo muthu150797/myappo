@@ -6,6 +6,8 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import SideBar from './Sidebar.jsx';
 
 // import 'bootstrap-icons/font/bootstrap-icons.css';
 // import 'bootstrap'
@@ -80,20 +82,11 @@ const Dashboard = () => {
   };
   return (
     <div>
-      <div id="mySidebar" class="sidebar">
-        <ul>
-          <li>
-            <Link to="/dashboard/home">Home</Link>
-          </li>
-          <li>
-            <Link to="/dashboard/profile">Profile</Link>
-          </li>
-          <li>
-            <Link to="/dashboard/settings">Settings</Link>
-          </li>
-        </ul>
+     <div id="mySidebar" class="sidebar">
+      <SideBar/>
       </div>
-
+     
+      {/* <Sidebar/> */}
       <div id="main">
         <div class="header">
           <button class="openbtn" onClick={toggle}>
