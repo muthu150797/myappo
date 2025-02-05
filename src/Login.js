@@ -8,10 +8,14 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 //import axios from 'axios/dist/browser/axios.cjs';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { FadeLoader, GridLoader } from "react-spinners";
+import { alignPropType } from 'react-bootstrap/esm/types.js';
 
 const LoginComponent = (probs) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
   //const { token, setToken } = useToken();
   const navigate = useNavigate();
   const [token, setToken] = useState(() => localStorage.getItem('token'));
@@ -37,7 +41,9 @@ const LoginComponent = (probs) => {
   const Login = async () => {
     // Imagine you got a token from an API
     const newToken = probs.username;
+    setLoading(true);
     var userData = await postData();
+    setLoading(false);
     console.log('userss', userData);
     if (userData.status == 200) {
       console.log('userData', userData.data);
@@ -75,7 +81,14 @@ const LoginComponent = (probs) => {
     setToken(newToken);
   };
   return (
+    
     <div>
+      {/* Loader Overlay */}
+      {loading && (
+        <div  style={{position: "fixed",top: "50%",left: "50%",transform: "translate(-50%, -50%)",zIndex: 1000}}>
+          <FadeLoader color="#7561aa" />
+        </div>
+      )}
       <div class="container">
         <div class="screen">
           <div class="screen__content">
@@ -128,7 +141,7 @@ const LoginComponent = (probs) => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
   );
 };
 export default LoginComponent;
