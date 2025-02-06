@@ -12,10 +12,10 @@ const Home = () => {
     const loadData = async () => {
       setLoading(true);
       try {
-        const url = "https://newapi-5y5y.onrender.com/api/getAllUsers";
+        const url = "https://newapi-5y5y.onrender.com/users";
         const response = await axios.get(url);
-        
-        setUsername(response.data.name);
+        console.log("response:", response);
+
         setUserData(response.data);
       } catch (error) {
         console.error("Error:", error);
@@ -76,7 +76,7 @@ const Home = () => {
       {userData.map((item) => (
             <tr key={item.id}>
               <td>{item.id}</td>
-              <td>{item.name}</td>
+              <td>{item.username}</td>
               <td>{item.mail}</td>
             </tr>
           ))}

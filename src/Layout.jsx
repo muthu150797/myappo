@@ -106,13 +106,13 @@ const Layout = () => {
             </ul>
           </li>
           <li>
-            <a href="#"><Gear /> <span class="">Controls</span></a>
+            <a href="#"><Person /> <span class="">Controls</span></a>
             <ul class="nav-flyout">
               <li>
-                <a href="/layout/home"><i class="ion-ios-alarm-outline"></i>Users</a>
+                <a href="/dashboard/home"><i class="ion-ios-alarm-outline"></i>Users</a>
               </li>
               <li>
-                <a href="#"><i class="ion-ios-camera-outline"></i>Creeper</a>
+                <a href="/dashboard/profile"><i class="ion-ios-camera-outline"></i>Profile</a>
               </li>
               <li>
                 <a href="#"><i class="ion-ios-chatboxes-outline"></i>Hate</a>
