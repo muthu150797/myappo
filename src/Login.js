@@ -49,7 +49,7 @@ const LoginComponent = (probs) => {
       console.log('userData', userData.data);
       localStorage.setItem('token', userData.data.id);
       setToken(userData.data.mail)
-      navigate('/layout');
+      navigate('/dashboard');
     } else {
       showErrorToast(userData.data.message);
     }

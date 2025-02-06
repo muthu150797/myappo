@@ -45,7 +45,7 @@ export default function App() {
         <Route path="/" element={<LoginComponent />} />
         {/* <Route path="/layout" element={<Layout />} /> */}
         <Route
-          path="/layout"
+          path="/dashboard"
           element={
             <PrivateRoute>
               <Layout />
@@ -58,7 +58,7 @@ export default function App() {
           <Route path="settings" element={<Settings />} />
         </Route>
         <Route
-          path="/dashboard"
+          path="/dashboard2"
           element={
             <PrivateRoute>
               <Dashboard />

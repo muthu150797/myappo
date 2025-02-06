@@ -86,7 +86,7 @@ const Layout = () => {
   return (
     <div class="container-fluid">
      <div class="row">
-      <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar sidebar-nav">
+      <div class="col-3 d-md-block bg-light sidebar sidebar-nav">
         <ul>
           <li>
             <a href="#"><House /> <span>Shop</span></a>
@@ -203,8 +203,8 @@ const Layout = () => {
             <a href="#"><i class="ion-ios-medical-outline"></i> <span class="">Cocaine</span></a>
           </li>
         </ul>
-      </nav>
-  <main class="col-md-9 ms-sm-auto col-lg-12 px-4">
+      </div>
+  <div class="col-9 ms-sm-auto" style={{  width: "-webkit-fill-available"}}>
       <div id="main">
         <div class="header">
          
@@ -226,7 +226,7 @@ const Layout = () => {
         })()}
         <Outlet />
       </div>
-      </main>
+      </div>
   </div>
   </div>
   );
