@@ -34,7 +34,8 @@ const VerifyUser = () => {
         try {
             const url = "https://newapi-5y5y.onrender.com/api/users/verify?token=" + token;
             const response = await axios.get(url);
-            await setUser(response.data)
+            console.log('response', userData);
+             setUser(response.data)
             console.log('userData', userData);
 
             if (response.data.verified) {
