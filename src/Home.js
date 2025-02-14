@@ -19,7 +19,7 @@ const Home = () => {
   const [editMode, setEditMode] = useState(false);
   const [user, setSelectedUser] = useState({
     username: '',
-    mail: '',
+    email: '',
     password:'',
     id:0
   });
@@ -64,11 +64,11 @@ const Home = () => {
     const userData={
       "name":user.username,
       // "password":user.password,
-      "mail":user.email,
+      "email":user.email,
       "deptId":2
    }
    let id=user.id;
-   const url = 'https://newapi-5y5y.onrender.com/users/'+id;
+   const url = 'https://newapi-5y5y.onrender.com/api/users/updateUserById?id='+id;
    
     try {
       const response = await axios.put(url, userData, {
@@ -93,10 +93,9 @@ const Home = () => {
     const userData={
       "name":user.username,
       // "password":user.password,
-      "mail":user.email,
-      "deptId":2
+      "email":user.email,
    }
-   const url = 'https://newapi-5y5y.onrender.com/api/users/getAllUsers';
+   const url = 'https://newapi-5y5y.onrender.com/api/users';
    
     try {
       const response = await axios.post(url, userData, {
@@ -183,7 +182,7 @@ const Home = () => {
                 placeholder="Enter the email"
                 value={user.mail||''}
                 onChange={handleInputChange}
-                name="mail" // Name should match state key
+                name="email" // Name should match state key
                 autoFocus
               />
             </Form.Group>
