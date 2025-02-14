@@ -16,6 +16,8 @@ const ChangePassword = () => {
     const [loading, setLoading] = useState(false);
     const [userData, setUser] = useState([]);
     const [errorText, setError] = useState('');
+    const [token, setToken] = useState(() => localStorage.getItem('token'));
+
     const showErrorToast = (message) => {
         toast.error(message, {
           position: "top-right",
