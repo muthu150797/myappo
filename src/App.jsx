@@ -10,7 +10,7 @@ import MyComponent from './MyComponent.jsx';
 import LoginComponent from './Login.js';
 import Home from './Home';
 import ReactDOM from 'react-dom';
-
+import VerifyUser from './VerifyUser.js';
 import {
   BrowserRouter,
   Route,
@@ -42,6 +42,7 @@ export default function App() {
     <div class="App">
             <ToastContainer />
       <Routes>
+      <Route path="/verify" element={<VerifyUser />} />
         <Route path="/" element={<LoginComponent />} />
         {/* <Route path="/layout" element={<Layout />} /> */}
         <Route
