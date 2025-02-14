@@ -36,7 +36,7 @@ const VerifyUser = () => {
     }
    
     if(userData!=null&&userData.verified){
-        navigate("./login")
+        navigate("/login")
     }
     else{
     return (<div>{userData.message}</div>);
