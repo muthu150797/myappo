@@ -50,7 +50,7 @@ const Home = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const url = "https://newapi-5y5y.onrender.com/users";
+      const url = "https://newapi-5y5y.onrender.com/api/users/getAllUsers";
       const response = await axios.get(url);
       console.log("response:", response);
 
@@ -226,6 +226,7 @@ const Home = () => {
             <th>ID</th>
             <th>First Name</th>
             <th>Email</th>
+            <th>Active</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -235,6 +236,7 @@ const Home = () => {
               <td>{item.id}</td>
               <td>{item.name}</td>
               <td>{item.email}</td>
+               <td>{item.active?"Active":"In Active"}</td>
               <td> <Button variant="primary"  onClick={()=>handleShow(item)}>
                Edit
               </Button> <Button  className="pr-2" variant="primary"  onClick={()=>deleteUser(item)}>
