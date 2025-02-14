@@ -32,20 +32,20 @@ const ChangePassword = () => {
    
     const ChangePassword = async () => {
         if(newpassword!=confirmpassword){
-            setError("Confirm password not matching")
+            showErrorToast("Confirm password not matching")
             return false;
         }
         // Imagine you got a token from an API
         setLoading(true);
         var userDatas = await postData();
+        setUser(userDatas.data)
         setLoading(false);
         console.log('userss', userData);
-        if (userData.status == 200) {
-            setUser(userDatas.data)
+        if (userDatas.status == 200) {
           console.log('userData', userData);
           localStorage.setItem('token', userData.id);
           setToken(userData.email)
-          navigate('/login');
+          navigate('/dashboard');
         } else {
           showErrorToast(userData.message);
         }
