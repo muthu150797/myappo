@@ -62,9 +62,9 @@ const Home = () => {
   };
   const updateUser=async()=>{
     const userData={
-      "username":user.username,
+      "name":user.username,
       // "password":user.password,
-      "mail":user.mail,
+      "mail":user.email,
       "deptId":2
    }
    let id=user.id;
@@ -91,12 +91,12 @@ const Home = () => {
   const addUser=async()=>{
     console.log("userdataforadd",user)
     const userData={
-      "username":user.username,
+      "name":user.username,
       // "password":user.password,
-      "mail":user.mail,
+      "mail":user.email,
       "deptId":2
    }
-   const url = 'https://newapi-5y5y.onrender.com/users';
+   const url = 'https://newapi-5y5y.onrender.com/api/users/getAllUsers';
    
     try {
       const response = await axios.post(url, userData, {
@@ -233,8 +233,8 @@ const Home = () => {
           {userData.map((item) => (
             <tr key={item.id}>
               <td>{item.id}</td>
-              <td>{item.username}</td>
-              <td>{item.mail}</td>
+              <td>{item.name}</td>
+              <td>{item.email}</td>
               <td> <Button variant="primary"  onClick={()=>handleShow(item)}>
                Edit
               </Button> <Button  className="pr-2" variant="primary"  onClick={()=>deleteUser(item)}>

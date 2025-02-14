@@ -48,16 +48,16 @@ const LoginComponent = (probs) => {
     if (userData.status == 200) {
       console.log('userData', userData.data);
       localStorage.setItem('token', userData.data.id);
-      setToken(userData.data.mail)
+      setToken(userData.data.email)
       navigate('/dashboard');
     } else {
       showErrorToast(userData.data.message);
     }
   };
   const postData = async () => {
-    const url = 'https://newapi-5y5y.onrender.com/api/login';
+    const url = 'https://newapi-5y5y.onrender.com/api/users/login';
     const payload = {
-      username: username,
+      name: username,
       password: password,
     };
 
