@@ -10,16 +10,17 @@ const VerifyUser = () => {
     const [searchParams] = useSearchParams();
     const token = searchParams.get("token");
     const navigate = useNavigate();
-    const [userData, setUser] = useState('');
+    const [userData, setUser] = useState([]);
     useEffect( () => {
-       
-    });
+         VerifyUser();
+    },[]);
    const VerifyUser =async()=>{
         try {
             const url = "https://newapi-5y5y.onrender.com/api/users/verify?token="+token;
             const response = await axios.get(url);
-            console.log('response', response.data);
             await setUser(response.data)
+            console.log('userData', userData);
+
             if(response.data.verified){
                // navigate("./login")
             }
@@ -33,12 +34,12 @@ const VerifyUser = () => {
         } finally {
         }
     }
-    VerifyUser();
-    if(userData.verified){
-        //navigate("./login")
+   
+    if(userData!=null&&userData.verified){
+        navigate("./login")
     }
     else{
-    return (<div>userData.verified.message</div>);
+    return (<div>{userData.message}</div>);
     }
     {/* alert();
     const [searchParams] = useSearchParams();
