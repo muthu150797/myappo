@@ -27,6 +27,7 @@ const Welcome = () => <h2>Welcome</h2>;
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Layout from './Layout.jsx';
+import ChangePassword from './ChangePassword.js';
 export default function App() {
   const [isLogin, Login] = useState(false);
   const [code, setCode] = useState(`function Test () { return "hello"}`);
@@ -43,6 +44,8 @@ export default function App() {
             <ToastContainer />
       <Routes>
       <Route path="/verify" element={<VerifyUser />} />
+      <Route path="/change-password" element={<ChangePassword />} />
+
         <Route path="/" element={<LoginComponent />} />
         {/* <Route path="/layout" element={<Layout />} /> */}
         <Route
