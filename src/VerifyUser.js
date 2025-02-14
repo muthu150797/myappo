@@ -56,7 +56,7 @@ const VerifyUser = () => {
 
     if (userData != null && userData.verified) {
         return (
-            navigate('/change-password?id='+userData+id)
+            navigate('/change-password?id='+userData.userId)
         );
     }
     else {
