@@ -68,7 +68,7 @@ const Home = () => {
       "deptId":2
    }
    let _id=user._id;
-   const url = 'https://newapi-5y5y.onrender.com/api/users/updateUserById?_id='+_id;
+   const url = 'https://newapi-5y5y.onrender.com/api/users/updateUserById?id='+_id;
    
     try {
       const response = await axios.put(url, userData, {
