@@ -126,7 +126,7 @@ const Home = () => {
    if(confirm(`Are you sure to delete this user ${item.name}?`)){
      try{
       let _id=item._id;
-      const url = "https://newapi-5y5y.onrender.com/api/users/"+_id;
+      const url = "https://newapi-5y5y.onrender.com/api/users/deleteUserById?id="+_id;
       axios.delete(url)
       .then(response =>{
         setTimeout(() => {
