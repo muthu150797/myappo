@@ -21,7 +21,7 @@ const Home = () => {
     name: '',
     email: '',
     password:'',
-    id:0
+    _id:0
   });
   const [modalheading, setModalHeading] = useState('Add User');
   const [showModal, setShowModal] = useState(false);
@@ -67,8 +67,8 @@ const Home = () => {
       "email":user.email,
       "deptId":2
    }
-   let id=user.id;
-   const url = 'https://newapi-5y5y.onrender.com/api/users/updateUserById?id='+id;
+   let _id=user._id;
+   const url = 'https://newapi-5y5y.onrender.com/api/users/updateUserById?_id='+_id;
    
     try {
       const response = await axios.put(url, userData, {
@@ -125,8 +125,8 @@ const Home = () => {
   let deleteUser= (item)=>{
    if(confirm(`Are you sure to delete this user ${item.name}?`)){
      try{
-      let id=item.id;
-      const url = "https://newapi-5y5y.onrender.com/users/"+id;
+      let _id=item._id;
+      const url = "https://newapi-5y5y.onrender.com/api/users/"+_id;
       axios.delete(url)
       .then(response =>{
         setTimeout(() => {
@@ -203,9 +203,9 @@ const Home = () => {
                 type="number"
                 hidden
                 placeholder="Enter the Id"
-                value={user.id||0}
+                value={user._id||0}
                 onChange={handleInputChange}
-                name="id" // Name should match state key
+                name="_id" // Name should match state key
                 autoFocus
               />
             </Form.Group>
@@ -231,8 +231,8 @@ const Home = () => {
         </thead>
         <tbody>
           {userData.map((item) => (
-            <tr key={item.id}>
-              <td>{item.id}</td>
+            <tr key={item._id}>
+              <td>{item._id}</td>
               <td>{item.name}</td>
               <td>{item.email}</td>
                <td>{item.active?"Active":"In Active"}</td>
