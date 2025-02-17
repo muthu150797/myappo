@@ -94,6 +94,8 @@ const Home = () => {
    const url = 'https://newapi-5y5y.onrender.com/api/users/updateUserById?id='+_id;
    
     try {
+      const token=localStorage.getItem('token')
+
       const response = await axios.put(url, userData, {
         headers: {
           'Content-Type': 'application/json',
@@ -114,6 +116,8 @@ const Home = () => {
     }
   }
   const addUser=async()=>{
+    const token=localStorage.getItem('token')
+
     console.log("userdataforadd",user)
     const userData={
       "name":user.name,
@@ -152,6 +156,8 @@ const Home = () => {
   let deleteUser= (item)=>{
    if(confirm(`Are you sure to delete this user ${item.name}?`)){
      try{
+      const token=localStorage.getItem('token')
+
       let _id=item._id;
       const url = "https://newapi-5y5y.onrender.com/api/users/deleteUserById?id="+_id;
       axios.delete(url,{
