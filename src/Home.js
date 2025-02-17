@@ -110,6 +110,7 @@ const Home = () => {
       console.log('response', response);
     } catch (error) {
       showErrorToast(error.response.data.message)
+      navigate('/login')
       console.log('error', error);
       return error;
     } finally {
@@ -141,6 +142,8 @@ const Home = () => {
       console.log('response', response);
     } catch (error) {
       showErrorToast(error.response.data.message)
+      navigate('/login')
+
       console.log('error', error);
       return error;
     } finally {
@@ -173,7 +176,9 @@ const Home = () => {
         showSuccessToast(item.name+" is deleted successfully")
         console.log("Data deleted:", response.data)
       })
-      .catch(error =>showErrorToast(error.response.data.message)
+      .catch(error =>showErrorToast(error.response.data.message,
+      navigate('/login')
+      )
       );
         
      }
