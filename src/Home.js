@@ -51,9 +51,16 @@ const Home = () => {
     setLoading(true);
     try {
       const url = "https://newapi-5y5y.onrender.com/api/users/getAllUsers";
-      const response = await axios.get(url);
+      const token=localStorage.getItem('token')
+      const response = await axios.get(url,{
+        headers: {
+          'Authorization': 'Bearer '+token,
+        },
+      });
+      if(response.status!==200){
+       alert(response.data.message)
+      }
       console.log("response:", response);
-
       setUserData(response.data);
     } catch (error) {
       console.error("Error:", error);

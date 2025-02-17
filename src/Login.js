@@ -40,15 +40,15 @@ const LoginComponent = (probs) => {
   }, [token]); // Run when `token` changes
   const Login = async () => {
     // Imagine you got a token from an API
-    const newToken = probs.username;
+  //  const newToken = probs.username;
     setLoading(true);
     var userData = await postData();
     setLoading(false);
     console.log('userss', userData);
     if (userData.status == 200) {
       console.log('userData', userData.data);
-      localStorage.setItem('token', userData.data.id);
-      setToken(userData.data.email)
+      localStorage.setItem('token', userData.data.token);
+      setToken(userData.data.token)
       navigate('/dashboard');
     } else {
       showErrorToast(userData.data.message);
@@ -65,6 +65,7 @@ const LoginComponent = (probs) => {
       const response = await axios.post(url, payload, {
         headers: {
           'Content-Type': 'application/json',
+          
         },
       });
       console.log('response', response);
@@ -78,7 +79,7 @@ const LoginComponent = (probs) => {
   const LoginME = () => {
     // Imagine you got a token from an API
     const newToken = probs.username;
-    setToken(newToken);
+    //setToken(newToken);
   };
   return (
     
