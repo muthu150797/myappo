@@ -106,6 +106,7 @@ const Home = () => {
       showSuccessToast(user.name+" updated successfully")
       console.log('response', response);
     } catch (error) {
+      showErrorToast(error.response.data.message)
       console.log('error', error);
       return error;
     } finally {
@@ -133,6 +134,7 @@ const Home = () => {
       showSuccessToast(user.name+" added successfully")
       console.log('response', response);
     } catch (error) {
+      showErrorToast(error.response.data.message)
       console.log('error', error);
       return error;
     } finally {
