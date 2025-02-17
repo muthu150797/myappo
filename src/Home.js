@@ -97,6 +97,7 @@ const Home = () => {
       const response = await axios.put(url, userData, {
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer '+token
         },
       });
       setTimeout(() => {
@@ -122,9 +123,10 @@ const Home = () => {
    const url = 'https://newapi-5y5y.onrender.com/api/users';
    
     try {
-      const response = await axios.post(url, userData, {
+      const response = await axios.post(url, userData,{
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer '+token
         },
       });
       setTimeout(() => {
@@ -152,7 +154,11 @@ const Home = () => {
      try{
       let _id=item._id;
       const url = "https://newapi-5y5y.onrender.com/api/users/deleteUserById?id="+_id;
-      axios.delete(url)
+      axios.delete(url,{
+        headers: {
+          'Authorization': 'Bearer '+token
+        },
+      })
       .then(response =>{
         setTimeout(() => {
           loadData(); 
@@ -161,7 +167,8 @@ const Home = () => {
         showSuccessToast(item.name+" is deleted successfully")
         console.log("Data deleted:", response.data)
       })
-      .catch(error => console.error("Error:", error));
+      .catch(error =>showErrorToast(error.response.data.message)
+      );
         
      }
      catch(error){
