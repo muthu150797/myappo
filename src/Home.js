@@ -12,6 +12,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { CiCirclePlus } from "react-icons/ci";
 import { toast } from 'react-toastify';
 import { FadeLoader, GridLoader } from "react-spinners";
+import { Navigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
+
 const Home = () => {
   const [name, setUsername] = useState('');
   const [userData, setUserData] = useState([]);
@@ -23,6 +26,8 @@ const Home = () => {
     password:'',
     _id:0
   });
+  const navigate = useNavigate();
+
   const [modalheading, setModalHeading] = useState('Add User');
   const [showModal, setShowModal] = useState(false);
   const handleClose = () => setShowModal(false);
@@ -35,6 +40,17 @@ const Home = () => {
   }
   const showSuccessToast = (message) => {
     toast.success(message, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+  const showErrorToast = (message) => {
+    toast.error(message, {
       position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,
@@ -57,12 +73,12 @@ const Home = () => {
           'Authorization': 'Bearer '+token,
         },
       });
-      if(response.status!==200){
-       alert(response.data.message)
-      }
+      
       console.log("response:", response);
       setUserData(response.data);
     } catch (error) {
+      showErrorToast(error.response.data.message)
+      navigate('/login')
       console.error("Error:", error);
     }
     setLoading(false);
