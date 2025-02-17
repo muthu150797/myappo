@@ -13,12 +13,12 @@ import { CiCirclePlus } from "react-icons/ci";
 import { toast } from 'react-toastify';
 import { FadeLoader, GridLoader } from "react-spinners";
 const Home = () => {
-  const [username, setUsername] = useState('');
+  const [name, setUsername] = useState('');
   const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [user, setSelectedUser] = useState({
-    username: '',
+    name: '',
     email: '',
     password:'',
     id:0
@@ -62,7 +62,7 @@ const Home = () => {
   };
   const updateUser=async()=>{
     const userData={
-      "name":user.username,
+      "name":user.name,
       // "password":user.password,
       "email":user.email,
       "deptId":2
@@ -80,7 +80,7 @@ const Home = () => {
         loadData(); 
       }, 2000);
       setShowModal(false)
-      showSuccessToast(user.username+" updated successfully")
+      showSuccessToast(user.name+" updated successfully")
       console.log('response', response);
     } catch (error) {
       console.log('error', error);
@@ -91,7 +91,7 @@ const Home = () => {
   const addUser=async()=>{
     console.log("userdataforadd",user)
     const userData={
-      "name":user.username,
+      "name":user.name,
       // "password":user.password,
       "email":user.email,
    }
@@ -107,7 +107,7 @@ const Home = () => {
         loadData(); 
       }, 2000);
       setShowModal(false)
-      showSuccessToast(user.username+" added successfully")
+      showSuccessToast(user.name+" added successfully")
       console.log('response', response);
     } catch (error) {
       console.log('error', error);
@@ -123,7 +123,7 @@ const Home = () => {
     });
   };
   let deleteUser= (item)=>{
-   if(confirm(`Are you sure to delete this user ${item.username}?`)){
+   if(confirm(`Are you sure to delete this user ${item.name}?`)){
      try{
       let id=item.id;
       const url = "https://newapi-5y5y.onrender.com/users/"+id;
@@ -133,7 +133,7 @@ const Home = () => {
           loadData(); 
         }, 2000);
        
-        showSuccessToast(item.username+" is deleted successfully")
+        showSuccessToast(item.name+" is deleted successfully")
         console.log("Data deleted:", response.data)
       })
       .catch(error => console.error("Error:", error));
@@ -169,9 +169,9 @@ const Home = () => {
               <Form.Control
                 type="text"
                 placeholder="Enter the name"
-                value={user.username||''}
+                value={user.name||''}
                 onChange={handleInputChange}
-                name="username" // Name should match state key
+                name="name" // Name should match state key
                 autoFocus
               />
             </Form.Group>
@@ -180,7 +180,7 @@ const Home = () => {
               <Form.Control
                 type="email"
                 placeholder="Enter the email"
-                value={user.mail||''}
+                value={user.email||''}
                 onChange={handleInputChange}
                 name="email" // Name should match state key
                 autoFocus
