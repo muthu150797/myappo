@@ -89,10 +89,10 @@ const Layout = () => {
       <div class="col-3 d-md-block bg-light sidebar sidebar-nav">
         <ul>
           <li>
-            <a href="#"><House /> <span>Shop</span></a>
+            <a href="#"><House /> <span>I'm map</span></a>
             <ul class="nav-flyout">
               <li>
-                <a href="#"><i class="ion-ios-color-filter-outline"></i>Derps</a>
+                <a href="/dashboard/open-map"><i class="ion-ios-color-filter-outline"></i>Open Map</a>
               </li>
               <li>
                 <a href="#"><i class="ion-ios-clock-outline"></i>Times</a>

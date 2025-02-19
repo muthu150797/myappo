@@ -28,6 +28,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Layout from './Layout.jsx';
 import ChangePassword from './ChangePassword.js';
+import MyMap from './MyMap.js';
 export default function App() {
   const [isLogin, Login] = useState(false);
   const [code, setCode] = useState(`function Test () { return "hello"}`);
@@ -60,6 +61,8 @@ export default function App() {
           <Route path="home" element={<Home />} />
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="open-map" element={<MyMap />} />
+
         </Route>
         <Route
           path="/dashboard2"
