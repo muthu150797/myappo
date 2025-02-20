@@ -41,7 +41,7 @@ const LoginComponent = (probs) => {
   const Login = async () => {
 
     if (window.gtag) {
-      window.gtag("event", "login_click2", {
+      window.gtag("event", "login_click", {
         event_category: "Button Click",
         event_label: "Login Button",
         value: 1
