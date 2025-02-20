@@ -123,7 +123,7 @@ const LoginComponent = (probs) => {
                   onChange={(e) => setPassword(e.target.value)}
                 ></input>
               </div>
-              <button
+              <button id="loginBtn"
                 onClick={(e) => {
                   e.preventDefault();
                   Login();
