@@ -39,6 +39,15 @@ const LoginComponent = (probs) => {
     }
   }, [token]); // Run when `token` changes
   const Login = async () => {
+
+    if (window.gtag) {
+      window.gtag("event", "login_click2", {
+        event_category: "Button Click",
+        event_label: "Login Button",
+        value: 1
+      });
+    }
+    console.log("Login Click Tracked!");
     // Imagine you got a token from an API
   //  const newToken = probs.username;
     setLoading(true);
