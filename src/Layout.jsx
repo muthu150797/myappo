@@ -63,6 +63,15 @@ const Layout = () => {
   };
 
   const logout = () => {
+    if (window.gtag) {
+      window.gtag("event", "logout", {
+        event_category: "User Actions",
+        event_label: 'User Logged Out',
+        page_location: window.location.href
+      });
+    }
+    console.log("logout Click Tracked!");
+
     setToken('');
     localStorage.removeItem('token') 
     navigate('/');
