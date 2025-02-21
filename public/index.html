@@ -22,7 +22,30 @@
   gtag('config', 'G-WSNFBY3MFT');
 </script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <div id="root">
+ <script>
+  window.addEventListener("mouseleave", function (event) {
+    if (event.clientY <= 0) { // Detects when the mouse moves to the top (exit intent)
+        gtag('event', 'exit_intent', {
+            event_category: 'User Behavior',
+            event_label: document.title,
+            page_location: window.location.href
+        });
+    }
+});
+
+document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === 'hidden') { // When user leaves the tab
+        gtag('event', 'tab_hidden', {
+            event_category: 'User Behavior',
+            event_label: document.title,
+            page_location: window.location.href
+        });
+    }
+});
+
+ </script>
+
+<div id="root">
 <!-- Google Tag Manager (noscript) 
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5TJ7DVP8"
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
