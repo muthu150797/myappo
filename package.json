@@ -8,6 +8,7 @@
     "bourbon": "^7.3.0",
     "cdbreact": "^1.5.19",
     "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
     "debug": "4.4.0",
     "events": "3.3.0",
     "firebase": "^11.3.1",

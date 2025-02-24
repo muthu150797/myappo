@@ -5,6 +5,9 @@ import { Card, Form, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { db } from "./firebase"
 import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "firebase/firestore";
+import ChatContent from "./ChatContent/ChatContent";
+import ChatList from "./ChatList/ChatList";
+import "./Chat.css";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -13,7 +16,7 @@ const Chat = () => {
   const messagesEndRef = useRef(null);
   const [user, setUser] = useState([]);
 
-  useEffect(async( ) => {
+  useEffect(( ) => {
     const userdata = JSON.parse(localStorage.getItem("user"));
     setUser(userdata);
   
@@ -21,10 +24,9 @@ const Chat = () => {
   
     const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
   
-    const unsubscribe = await  onSnapshot(q, async (snapshot) => {
-      await setMessages(
+    const unsubscribe =   onSnapshot(q, async (snapshot) => {
+       setMessages(
           snapshot.docs.map((doc) => {
-          console.log("mesaahes",doc.data())
           const data =  doc.data(); // ✅ Define `data` correctly
           return {
             id: doc.id,
@@ -56,35 +58,39 @@ const Chat = () => {
   };
 
   return (
-    <Card className="w-50 mx-auto mt-4 shadow-lg bg-white">
-      <Card.Body className="d-flex flex-column" style={{ height: "500px" }}>
-        <div className="flex-grow-1 overflow-auto p-2">
-          {messages.map((msg, index) => (
-            <div
-              key={index}
-              className={`d-flex align-items-center mb-2 ${msg.senderId === user._id? "justify-content-end" : "justify-content-start"}`}
-            >
-              <User size={24} className="me-2 text-dark" />
-              <div className={`p-2 rounded ${msg.senderId ===user._id ? "bg-primary text-white" : "bg-secondary text-white"}`}>
-              <p className="mb-0 fw-bold">{msg.name} <span className="text-sm font-normal text-gray-500" style={{ fontSize: "0.75rem" }}>{msg.time}</span></p>
-                <p className="mb-0">{msg.text}</p>
-              </div>
-            </div>
-          ))}
-          <div ref={messagesEndRef} />
-        </div>
-        <Form className="d-flex border-top p-2">
-          <Form.Control
-            type="text"
-            value={newMessage} onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Type a message..."
-          />
-          <Button variant="primary" onClick={sendMessage}>
-            <Send size={20} />
-          </Button>
-        </Form>
-      </Card.Body>
-    </Card>
+    <div className="main__chatbody">
+        <ChatList />
+        <ChatContent />
+      </div>
+    // <Card className="w-50 mx-auto mt-4 shadow-lg bg-white">
+    //   <Card.Body className="d-flex flex-column" style={{ height: "500px" }}>
+    //     <div className="flex-grow-1 overflow-auto p-2">
+    //       {messages.map((msg, index) => (
+    //         <div
+    //           key={index}
+    //           className={`d-flex align-items-center mb-2 ${msg.senderId === user._id? "justify-content-end" : "justify-content-start"}`}
+    //         >
+    //           <User size={24} className="me-2 text-dark" />
+    //           <div className={`p-2 rounded ${msg.senderId ===user._id ? "bg-primary text-white" : "bg-secondary text-white"}`}>
+    //           <p className="mb-0 fw-bold">{msg.name} <span className="text-sm font-normal text-gray-500" style={{ fontSize: "0.75rem" }}>{msg.time}</span></p>
+    //             <p className="mb-0">{msg.text}</p>
+    //           </div>
+    //         </div>
+    //       ))}
+    //       <div ref={messagesEndRef} />
+    //     </div>
+    //     <Form className="d-flex border-top p-2">
+    //       <Form.Control
+    //         type="text"
+    //         value={newMessage} onChange={(e) => setNewMessage(e.target.value)}
+    //         placeholder="Type a message..."
+    //       />
+    //       <Button variant="primary" onClick={sendMessage}>
+    //         <Send size={20} />
+    //       </Button>
+    //     </Form>
+    //   </Card.Body>
+    // </Card>
    
   );
 };
