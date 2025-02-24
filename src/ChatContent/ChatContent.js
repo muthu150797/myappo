@@ -213,7 +213,7 @@ export default class ChatContent extends Component {
                 <ChatItem
                   animationDelay={index + 2}
                   key={itm._id}
-                  user={itm.senderId!=this.user._id ? itm.type : "me"}
+                  user={itm.senderId!=this.user._id ? "other" : "me"}
                   msg={itm.text}
                   time={this.timeAgo(itm.createdAt)}
                   image={itm.image}
