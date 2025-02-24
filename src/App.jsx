@@ -29,6 +29,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Layout from './Layout.jsx';
 import ChangePassword from './ChangePassword.js';
 import MyMap from './MyMap.js';
+import Chat from './Chat.js';
 export default function App() {
   const [isLogin, Login] = useState(false);
   const [code, setCode] = useState(`function Test () { return "hello"}`);
@@ -45,6 +46,7 @@ export default function App() {
             <ToastContainer />
       <Routes>
       <Route path="/verify" element={<VerifyUser />} />
+
       <Route path="/change-password" element={<ChangePassword />} />
 
         <Route path="/" element={<LoginComponent />} />
@@ -62,6 +64,7 @@ export default function App() {
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
           <Route path="open-map" element={<MyMap />} />
+          <Route path="chat-with-me" element={<Chat />} />
 
         </Route>
         <Route

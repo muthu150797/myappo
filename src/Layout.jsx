@@ -121,7 +121,7 @@ const Layout = () => {
                 <a href="/dashboard/home"><i class="ion-ios-alarm-outline"></i>Users</a>
               </li>
               <li>
-                <a href="/dashboard/profile"><i class="ion-ios-camera-outline"></i>Profile</a>
+                <a href="/dashboard/chat-with-me"><i class="ion-ios-camera-outline"></i>Chat</a>
               </li>
               <li>
                 <a href="#"><i class="ion-ios-chatboxes-outline"></i>Hate</a>

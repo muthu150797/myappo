@@ -56,6 +56,7 @@ const LoginComponent = (probs) => {
     console.log('userss', userData);
     if (userData.status == 200) {
       console.log('userData', userData.data);
+      localStorage.setItem("user", JSON.stringify( userData.data.users));
       localStorage.setItem('token', userData.data.token);
       setToken(userData.data.token)
       navigate('/dashboard');
