@@ -13,14 +13,32 @@ const Chat = () => {
   const messagesEndRef = useRef(null);
   const [user, setUser] = useState([]);
 
-  useEffect(() => {
-    const userdata=JSON.parse(localStorage.getItem('user'))
+  useEffect(async( ) => {
+    const userdata = JSON.parse(localStorage.getItem("user"));
     setUser(userdata);
+  
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    const q = query(collection(db, "messages"), orderBy("createdAt"));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      setMessages(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+  
+    const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
+  
+    const unsubscribe = await  onSnapshot(q, async (snapshot) => {
+      await setMessages(
+          snapshot.docs.map((doc) => {
+          console.log("mesaahes",doc.data())
+          const data =  doc.data(); // ✅ Define `data` correctly
+          return {
+            id: doc.id,
+            ...data,
+            time: data.createdAt?.toDate?data.createdAt.toDate().toLocaleString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+            }):"not valid time"
+          };
+        })
+      );
     });
+  
     return () => unsubscribe();
   }, []);
 
@@ -32,11 +50,9 @@ const Chat = () => {
       chatId:"public",
       senderId:user._id,
       name:user.name,
-      createdAt: serverTimestamp().seconds*1000,
+      createdAt: serverTimestamp(),//.seconds*1000,
       username: username, // Use entered username instead of authentication
     });
-
-    setNewMessage("");
   };
 
   return (
@@ -50,11 +66,7 @@ const Chat = () => {
             >
               <User size={24} className="me-2 text-dark" />
               <div className={`p-2 rounded ${msg.senderId ===user._id ? "bg-primary text-white" : "bg-secondary text-white"}`}>
-              <p className="mb-0 fw-bold">{msg.name} <span className="text-muted" style={{ fontSize: "0.75rem" }}>{ new Date(msg.createdAt.seconds*1000).toLocaleTimeString("en-US", { 
- hour: "numeric",
- minute: "2-digit",
-  hour12: true // Use `false` for 24-hour format
-})}</span></p>
+              <p className="mb-0 fw-bold">{msg.name} <span className="text-sm font-normal text-gray-500" style={{ fontSize: "0.75rem" }}>{msg.time}</span></p>
                 <p className="mb-0">{msg.text}</p>
               </div>
             </div>
@@ -73,19 +85,7 @@ const Chat = () => {
         </Form>
       </Card.Body>
     </Card>
-    // <div>
-    //   <h2>Public  Chat</h2>
-     
-    //   <div>
-    //     {messages.map((msg) => (
-    //       <p key={msg.id}>
-    //         <strong>{msg.name || "Anonymous"}:</strong> {msg.text}
-    //       </p>
-    //     ))}
-    //   </div>
-    //   <input type="text" value={newMessage} onChange={(e) => setNewMessage(e.target.value)} />
-    //   <button onClick={sendMessage}>Send</button>
-    // </div>
+   
   );
 };
 
