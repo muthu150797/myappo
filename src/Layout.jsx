@@ -12,6 +12,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SideBar from './Sidebar.jsx';
+import { dbReal } from './firebase.js';
+import { ref,get,onDisconnect, update, serverTimestamp } from "firebase/database";
+
 const Layout = () => {
   const [expanded, setExpanded] = useState(true);
   const [submenuOpen, setSubmenuOpen] = useState(false);
@@ -62,7 +65,26 @@ const Layout = () => {
     container.classList.toggle('collapsed');
   };
 
-  const logout = () => {
+  const logout = async() => {
+    const user=JSON.parse(localStorage.getItem("user"))
+    const userStatusRef = ref(dbReal, `users/${user._id}`);
+    // Optionally, cancel any pending onDisconnect operations
+    const disconnectObj = onDisconnect(userStatusRef);
+    // Cancel any scheduled onDisconnect actions
+    disconnectObj.cancel()
+      .catch((error) => console.error("Error cancelling onDisconnect:", error));
+      const snapshot = await get(userStatusRef);
+      if (snapshot.exists()) {
+        update(userStatusRef, {
+          "status/state": "offline",
+          "status/lastSeen": serverTimestamp()
+        }).then(() => {
+            console.log("User signed out and status set to offline.");
+          })
+          .catch((error) => console.error("Error during logout:", error));
+      }
+     
+
     if (window.gtag) {
       window.gtag("event", "logout", {
         event_category: "User Actions",

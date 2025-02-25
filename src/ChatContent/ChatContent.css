@@ -279,3 +279,31 @@
     height: 100%;
   }
   
+  .scrollContainer {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto; /* Enable vertical scrolling */
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+  }
+  
+  /* Custom Scrollbar */
+  .scrollContainer::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  .scrollContainer::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  .scrollContainer::-webkit-scrollbar-thumb {
+    background: #0d90dc;
+    border-radius: 10px;
+  }
+  
+  .scrollContainer::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  

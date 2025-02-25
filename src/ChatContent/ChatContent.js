@@ -111,7 +111,7 @@ export default class ChatContent extends Component {
         return "Invalid date";
     } 
    return  formatDistanceToNow(date, { addSuffix: true })
-   .replace("about","").replace("in","");
+   .replace("about","").replace("in","").replace("less than a mute ago","just now").replace("mutes","minutes");
     const seconds = Math.floor((new Date() - new Date(date)) / 1000);
 
     if (seconds < 60) return "Just now";
@@ -167,6 +167,11 @@ export default class ChatContent extends Component {
       }
     });
   }
+  onEnterKey=(e)=>{
+    if (e.key === "Enter") { // Recommended way
+       this.sendMessage();
+  }
+  }
   onStateChange = (e) => {
     this.setState({ msg: e.target.value,newMessage:e.target.value });
   };
@@ -181,6 +186,7 @@ export default class ChatContent extends Component {
       createdAt: serverTimestamp(),//.seconds*1000,
       username: "", // Use entered username instead of authentication
     });
+    this.state.newMessage="";
     this.getMessages();
     this.scrollToBottom();
   };
@@ -206,8 +212,8 @@ export default class ChatContent extends Component {
             </div>
           </div>
         </div>
-        <div className="content__body">
-          <div className="chat__items">
+        <div className="content__body scrollContainer">
+          <div className="chat__items content">
             {this.messages.map((itm, index) => {
               return (
                 <ChatItem
@@ -216,7 +222,7 @@ export default class ChatContent extends Component {
                   user={itm.senderId!=this.user._id ? "other" : "me"}
                   msg={itm.text}
                   time={this.timeAgo(itm.createdAt)}
-                  image={itm.image}
+                  image={"https://www.shutterstock.com/image-photo/passport-photo-portrait-young-man-260nw-2437772333.jpg"}
                 />
               );
             })}
@@ -232,6 +238,7 @@ export default class ChatContent extends Component {
               type="text"
               placeholder="Type a message here"
               onChange={this.onStateChange}
+              onKeyDown={this.onEnterKey}
               value={this.state.newMessage || ""}            />
             <button onClick={this.sendMessage}  className="btnSendMsg" id="sendMsgBtn">
               <i className="fa fa-paper-plane"></i>

@@ -10,6 +10,9 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { FadeLoader, GridLoader } from "react-spinners";
 import { alignPropType } from 'react-bootstrap/esm/types.js';
+import { db } from "./firebase.js"
+import { ref,update, set,get, onDisconnect ,serverTimestamp} from "firebase/database";
+import { dbReal } from "./firebase.js"
 
 const LoginComponent = (probs) => {
   const [username, setUsername] = useState('');
@@ -31,7 +34,41 @@ const LoginComponent = (probs) => {
       progress: undefined,
     });
   };
+  const  setUserOnline=async(userId,userData) =>{
+   
+    const userRef = ref(dbReal, `users/${userId}`);
 
+    try {
+        const snapshot = await get(userRef);
+
+        if (snapshot.exists()) {
+            // If user exists, update the existing data
+            update(userRef, {
+              "status/state": "online",
+           "status/lastSeen": serverTimestamp()
+          });
+            console.log("User status  updated:", userData);
+        } else {
+            // If user does not exist, create a new entry
+            await set(userRef, userData);
+            console.log("New user status created:", userData);
+        }
+        onDisconnect(userStatusRef)
+        .update( {
+          "status/state": "offline",
+          "status/lastSeen": serverTimestamp()
+        })
+        .then(() => {
+          console.log("onDisconnect update scheduled successfully! 🚀");
+        })
+        .catch((error) => {
+          console.error("Error scheduling onDisconnect update:", error);
+        });
+  
+    } catch (error) {
+        console.error("Error creating/updating user online status:", error);
+    }
+}
   //const history = useNavigate ();
   useEffect(() => {
     if (token) {
@@ -57,11 +94,12 @@ const LoginComponent = (probs) => {
     if (userData.status == 200) {
       console.log('userData', userData.data);
       localStorage.setItem("user", JSON.stringify( userData.data.users));
+      await setUserOnline(userData.data.users._id, { name: userData.data.users.name, status:{state: "online", lastSeen: serverTimestamp()} });
       localStorage.setItem('token', userData.data.token);
       setToken(userData.data.token)
       navigate('/dashboard');
     } else {
-      showErrorToast(userData.data.message);
+      showErrorToast(userData.data?.message);
     }
   };
   const postData = async () => {
