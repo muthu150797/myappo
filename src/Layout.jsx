@@ -24,7 +24,8 @@ const Layout = () => {
   const location = useLocation();
   let isFirstLoad = true;
   const navigate = useNavigate();
-  
+  const [role,setRole]=useState("user");
+
   // Access current URL components
   const { pathname, search, hash } = location;
   const currentUrl = `${pathname}${search}${hash}`;
@@ -32,7 +33,6 @@ const Layout = () => {
   const fetchData = () => {
     // Replace this with your data fetching logic
     const apiUrl = 'https://jsonplaceholder.typicode.com/posts/1';
-
     // // Make a GET request
     // axios
     //   .get(apiUrl)
@@ -46,7 +46,8 @@ const Layout = () => {
   };
   // Step 3: Update state on button click
   useEffect(() => {
-   
+    const userdata = JSON.parse(localStorage.getItem("user"));
+    setRole(userdata.role);
     const index = '/layout';
     const regex = new RegExp(`\\b${pathname}\\b`, 'i'); // 'i' for case-insensitive search
     const match = index.match(regex);
@@ -140,10 +141,10 @@ const Layout = () => {
             <a href="#"><Person /> <span class="">Controls</span></a>
             <ul class="nav-flyout">
               <li>
-                <a href="/dashboard/home"><i class="ion-ios-alarm-outline"></i>Users</a>
+              {role === "admin" &&  <a href="/dashboard/home"><i class="ion-ios-alarm-outline"></i>Users</a>}
               </li>
               <li>
-                <a href="/dashboard/chat-with-me"><i class="ion-ios-camera-outline"></i>Chat</a>
+                <a href=""><i class="ion-ios-camera-outline"></i></a>
               </li>
               <li>
                 <a href="#"><i class="ion-ios-chatboxes-outline"></i>Hate</a>
@@ -154,84 +155,7 @@ const Layout = () => {
             </ul>
           </li>
           <li>
-            <a href="#"><i class="ion-ios-briefcase-outline"></i> <span class="">Folio</span></a>
-            <ul class="nav-flyout">
-              <li>
-                <a href="#"><i class="ion-ios-flame-outline"></i>Burn</a>
-              </li>
-              <li>
-                <a href="#"><i class="ion-ios-lightbulb-outline"></i>Bulbs</a>
-              </li>
-              <li>
-                <a href="#"><i class="ion-ios-location-outline"></i>Where You</a>
-              </li>
-              <li>
-                <a href="#"><i class="ion-ios-locked-outline"></i>On Lock</a>
-              </li>
-               <li>
-                <a href="#"><i class="ion-ios-navigate-outline"></i>Ghostface</a>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <a href="#"><i class="ion-ios-analytics-outline"></i> <span class="">Graphicals</span></a>
-            <ul class="nav-flyout">
-              <li>
-                <a href="#"><i class="ion-ios-timer-outline"></i>Timers</a>
-              </li>
-              <li>
-                <a href="#"><i class="ion-arrow-graph-down-left"></i>You Lose</a>
-              </li>
-              <li>
-                <a href="#"><i class="ion-ios-partlysunny-outline"></i>Stormy</a>
-              </li>
-              <li>
-                <a href="#"><i class="ion-ios-timer-outline"></i>Lookie Look</a>
-              </li>
-              <li>
-                <a href="#"><i class="ion-ios-game-controller-a-outline"></i>Dork Mfer</a>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <a href="#"><i class="ion-ios-paper-outline"></i> <span class="">Papers</span></a>
-            <ul class="nav-flyout">
-              <li>
-                <a href="#"><i class="ion-ios-filing-outline"></i>File Cab</a>
-              </li>
-              <li>
-                <a href="#"><i class="ion-ios-information-outline"></i>Infos</a>
-              </li>
-              <li>
-                <a href="#"><i class="ion-ios-paperplane-outline"></i>Planes</a>
-              </li>
-              <li>
-                <a href="#"><i class="ion-android-star-outline"></i>Shop</a>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <a href="#"><i class="ion-ios-navigate-outline"></i> <span class="">Ass Finder</span></a>
-            <ul class="nav-flyout">
-              <li>
-                <a href="#"><i class="ion-ios-flame-outline"></i>Burn</a>
-              </li>
-              <li>
-                <a href="#"><i class="ion-ios-lightbulb-outline"></i>Bulbs</a>
-              </li>
-              <li>
-                <a href="#"><i class="ion-ios-location-outline"></i>Where You</a>
-              </li>
-              <li>
-                <a href="#"><i class="ion-ios-locked-outline"></i>On Lock</a>
-              </li>
-               <li>
-                <a href="#"><i class="ion-ios-navigate-outline"></i>Ghostface</a>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <a href="#"><i class="ion-ios-medical-outline"></i> <span class="">Cocaine</span></a>
+            <a href="/dashboard/chat-with-me"><i class="ion-ios-medical-outline"></i> <span class="">Chat</span></a>
           </li>
         </ul>
       </div>
