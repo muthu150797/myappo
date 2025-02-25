@@ -93,6 +93,7 @@ export default class ChatList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      onlineusers: [],
       allChats: this.allChatUsers
     };
    this.listenForAllUsers()
@@ -116,12 +117,20 @@ export default class ChatList extends Component {
             )
            
           });
+          this.setState((prevState) => ({
+            ...prevState, // Keep other state properties unchanged
+            onlineusers: this.onlineusers,
+          }));
           console.log("onlineusers", this.onlineusers);
 
         }
        
        // updateUI(usersData); // Pass data to your UI update function
       } else {
+        this.setState((prevState) => ({
+          ...prevState, // Keep other state properties unchanged
+          onlineusers: [],
+        }));
         console.log("No users found");
       }
     });
