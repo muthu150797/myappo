@@ -9,6 +9,7 @@ import { dbReal } from "../firebase";
 import { ref, onValue } from "firebase/database"
 export default class ChatList extends Component {
   onlineusers =[];
+   userid=JSON.parse(localStorage.getItem("user"))._id
   allChatUsers = [
     {
       image:
@@ -110,7 +111,9 @@ export default class ChatList extends Component {
         if(usersData!=null){
           Object.entries(usersData).forEach(([userId, userData]) => {
             this.onlineusers.push(
-              { name: userData.name,
+              { 
+                userId:userId,
+                name: userData.name,
                status: userData.status.state,
                img: "https://bootdey.com/img/Content/avatar/avatar3.png"
                }
@@ -156,7 +159,7 @@ export default class ChatList extends Component {
                 <li key={index} className="d-flex align-items-center p-2 rounded hover-bg-light">
                   <img src={user.img} alt="avatar" className="rounded-circle me-3" width="40" height="40" />
                   <div>
-                    <div className="fw-bold">{user.name}</div>
+                    <div className="fw-bold">{this.userid==user.userId?"You":user.name}</div>
                     <div className="text-muted small">
                       <i className={`fa fa-circle ${user.status === "online" ? "text-success" : "text-danger"} me-1`}></i>
                       {user.time || user.status}
