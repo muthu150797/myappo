@@ -133,6 +133,7 @@ export default class ChatContent extends Component {
     }
 };
   async getMessages() {
+    this.scrollToBottom();
     const userdata = JSON.parse(localStorage.getItem("user"));
     this.setState({ user: userdata });
   
@@ -166,6 +167,7 @@ export default class ChatContent extends Component {
         console.log("No messages found in Firestore.");
       }
     });
+   
   }
   onEnterKey=(e)=>{
     if (e.key === "Enter") { // Recommended way
