@@ -15,6 +15,7 @@ const Chat = () => {
   const [username, setUsername] = useState(""); // Ask for username
   const messagesEndRef = useRef(null);
   const [user, setUser] = useState([]);
+  const [childData, setChildData] = useState([]);
 
   useEffect(( ) => {
     const userdata = JSON.parse(localStorage.getItem("user"));
@@ -59,8 +60,8 @@ const Chat = () => {
 
   return (
     <div className="main__chatbody">
-        <ChatList />
-        <ChatContent />
+        <ChatList  onSendData={setChildData} />
+        <ChatContent data={childData}  />
       </div>
     // <Card className="w-50 mx-auto mt-4 shadow-lg bg-white">
     //   <Card.Body className="d-flex flex-column" style={{ height: "500px" }}>

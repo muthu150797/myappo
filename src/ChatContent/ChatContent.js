@@ -1,9 +1,10 @@
 import React, { Component, createRef, useEffect } from "react";
-import { db } from "../firebase"
+import { db,dbReal } from "../firebase"
 import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "firebase/firestore";
 import { Timestamp } from "firebase/firestore";
 import { formatDistanceToNow } from 'date-fns';
-
+import { ref,get,push,set, onValue } from "firebase/database";
+import {getChatId} from "../ChatList/ChatList"
 import "./ChatContent.css";
 import Avatar from "../ChatList/Avatar";
 import ChatItem from "./ChatItem";
@@ -75,29 +76,14 @@ export default class ChatContent extends Component {
     const userdata = JSON.parse(localStorage.getItem("user"));
     this.user=userdata;
   }
-
+  
   scrollToBottom = () => {
     this.messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
   componentDidMount() {
+    console.log("ChildA Props:", this.props);
     this.getMessages();
-    // window.addEventListener("keydown", (e) => {
-    //   if (e.keyCode == 13) {
-    //     if (this.state.msg != "") {
-    //       this.chatItms.push({
-    //         key: 1,
-    //         type: "",
-    //         msg: this.state.msg,
-    //         image:
-    //           "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTA78Na63ws7B7EAWYgTr9BxhX_Z8oLa1nvOA&usqp=CAU"
-    //       });
-    //       this.setState({ chat: [...this.chatItms] });
-    //       this.scrollToBottom();
-    //       this.setState({ msg: "" });
-    //     }
-    //   }
-    // });
     this.scrollToBottom();
   }
    timeAgo = (firebaseTimestamp) => {
@@ -132,7 +118,69 @@ export default class ChatContent extends Component {
         }
     }
 };
+componentDidUpdate(prevProps, prevState) {
+  console.log("prevProps values:", this.props);
+  console.log("probs current", this.props);
+  if (prevProps.data.userId != this.props.data.userId) {
+    console.log(`Prop changed from ${prevProps.data.userId} to ${this.props.data.userId}`);
+    this.getMessages();
+  }
+  
+}
   async getMessages() {
+    let chatId =await this.getChatId(this.props.data.userId,this.user._id)//
+    if(this.props.data.userId==undefined){
+    return;
+    }
+    alert(chatId)
+    const chatRef = ref(dbReal, "chats/"+chatId);
+    // Listen for real-time updates to the 'users' node
+    onValue(chatRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const usersDatas = snapshot.val();
+        console.log("All users Data:", usersDatas);
+         this.onlineusers=[];
+        if(usersDatas!=null){
+          Object.entries(usersDatas).forEach(([listId, mesagelist]) => {
+            Object.entries(mesagelist).forEach(([chatID ,message]) => {
+              console.log("message",message)
+              this.messages.push(
+                { 
+                  userId:message.senderId,
+                  _id:chatID,
+                  name: message.name,
+                   text:message.text,
+                  time: message.createdAt?.toDate
+                  ? message.createdAt.toDate().toLocaleString("en-US", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: true,
+                    })
+                  : "Invalid Time"
+                 }
+              )
+        // ✅ Debugging logs
+            })
+          });
+          console.log("Fetched Messages:", this.messages);
+          this.setState((prevState) => ({
+            ...prevState, // Keep other state properties unchanged
+            messages: [...this.messages],
+          }));
+
+        }
+       
+       // updateUI(usersData); // Pass data to your UI update function
+      } else {
+        this.setState((prevState) => ({
+          ...prevState, // Keep other state properties unchanged
+          messages: [],
+        }));
+        console.log("No users found");
+      }
+    });
+    this.scrollToBottom();
+    return 
     this.scrollToBottom();
     const userdata = JSON.parse(localStorage.getItem("user"));
     this.setState({ user: userdata });
@@ -169,6 +217,9 @@ export default class ChatContent extends Component {
     });
    
   }
+  getChatId(userA, userB) {
+    return [String(userA).trim(), String(userB).trim()].sort().join("_");
+  }
   onEnterKey=(e)=>{
     if (e.key === "Enter") { // Recommended way
        this.sendMessage();
@@ -179,15 +230,31 @@ export default class ChatContent extends Component {
   };
   sendMessage=async()=>{
     if (!this.state.newMessage.trim()) return;
-
-    await addDoc(collection(db, "messages"), {
-      text: this.state.newMessage,
-      chatId:"public",
-      senderId:this.user._id,
-      name:this.user.name,
-      createdAt: serverTimestamp(),//.seconds*1000,
-      username: "", // Use entered username instead of authentication
-    });
+     const id1=this.user._id;
+      const id2=this.props.data.userId;
+    let chatId =this.getChatId(id1,id2)// Unique chat ID
+      const chatRef = ref(dbReal, `chats/${chatId}`);
+    try {
+        const snapshot = await get(chatRef);
+            // If user does not exist, create a new entry
+            await push(chatRef,  {
+              text: this.state.newMessage,
+              senderId:this.user._id,
+              name:this.user.name,
+               createdAt:serverTimestamp(),
+               }); // Creates an empty list node
+            console.log("New  message created:");
+    } catch (error) {
+        console.error("Error creating/updating usermessgaes:", error);
+    }
+    // await addDoc(collection(db, "messages"), {
+    //   text: this.state.newMessage,
+    //   chatId:"public",
+    //   senderId:this.user._id,
+    //   name:this.user.name,
+    //   createdAt: serverTimestamp(),//.seconds*1000,
+    //   username: "", // Use entered username instead of authentication
+    // });
     this.state.newMessage="";
     this.getMessages();
     this.scrollToBottom();
@@ -202,7 +269,7 @@ export default class ChatContent extends Component {
                 isOnline="active"
                 image="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTA78Na63ws7B7EAWYgTr9BxhX_Z8oLa1nvOA&usqp=CAU"
               />
-              <p>Tim Hover</p>
+              <p>{this.props.data.name}</p>
             </div>
           </div>
 
