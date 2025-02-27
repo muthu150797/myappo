@@ -36,7 +36,7 @@ export const requestNotificationPermission = async () => {
 };
 
 // Listen for incoming messages
-export const onMessageListener = () =>
+//export const onMessageListener = () =>
 // console.log("Listening new messages");
 //   new Promise((resolve) => {
 //       onMessage(messaging, (payload) => {
@@ -46,6 +46,19 @@ export const onMessageListener = () =>
 //       });
 //   });
 
-  onMessage(messaging, (payload) => {
-    console.log("Message received in foreground:", payload);
-  });
+if("serviceWorker" in navigator) {
+  navigator.serviceWorker
+    .register("/firebase-messaging-sw.js") // ✅ Make sure the path is correct
+    .then((registration) => {
+      console.log("Service Worker Registered", registration);
+      return getToken(messaging, { vapidKey: "BAyEbqfvvmcL4b5AfafNcohFvtj2m8Oxu_f-ytC4tjNbSGoMvy4zDodko4LPW-SAHebqeX849UC9xwSc9qzFeNw" });
+    })
+    .then((token) => console.log("FCM Token:", token))
+    .catch((err) => console.error("Service Worker Registration Failed:", err));
+}
+
+// Handle foreground notifications
+onMessage(messaging, (payload) => {
+  console.log("Foreground message received:", payload);
+});
+  
