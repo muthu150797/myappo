@@ -1,69 +1,20 @@
 import React, { Component, createRef, useEffect } from "react";
 import { db,dbReal } from "../firebase"
-import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, query, orderBy, onSnapshot } from "firebase/firestore";
 import { Timestamp } from "firebase/firestore";
 import { formatDistanceToNow } from 'date-fns';
-import { ref,get,push,set, onValue } from "firebase/database";
+import { ref,get,push,set,serverTimestamp, onValue,onChildAdded, update } from "firebase/database";
 import {getChatId} from "../ChatList/ChatList"
 import "./ChatContent.css";
 import Avatar from "../ChatList/Avatar";
 import ChatItem from "./ChatItem";
 import ChatList from "../ChatList/ChatList";
+
 export default class ChatContent extends Component {
   messagesEndRef = createRef(null);
    user=[];
     messages = [];
-  chatItms = [
-    {
-      key: 1,
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTA78Na63ws7B7EAWYgTr9BxhX_Z8oLa1nvOA&usqp=CAU",
-      type: "",
-      msg: "Hi Tim, How are you?"
-    },
-    {
-      key: 2,
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTA78Na63ws7B7EAWYgTr9BxhX_Z8oLa1nvOA&usqp=CAU",
-      type: "other",
-      msg: "I am fine."
-    },
-    {
-      key: 3,
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTA78Na63ws7B7EAWYgTr9BxhX_Z8oLa1nvOA&usqp=CAU",
-      type: "other",
-      msg: "What about you?"
-    },
-    {
-      key: 4,
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTA78Na63ws7B7EAWYgTr9BxhX_Z8oLa1nvOA&usqp=CAU",
-      type: "",
-      msg: "Awesome these days."
-    },
-    {
-      key: 5,
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTA78Na63ws7B7EAWYgTr9BxhX_Z8oLa1nvOA&usqp=CAU",
-      type: "other",
-      msg: "Finally. What's the plan?"
-    },
-    {
-      key: 6,
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTA78Na63ws7B7EAWYgTr9BxhX_Z8oLa1nvOA&usqp=CAU",
-      type: "",
-      msg: "what plan mate?"
-    },
-    {
-      key: 7,
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTA78Na63ws7B7EAWYgTr9BxhX_Z8oLa1nvOA&usqp=CAU",
-      type: "other",
-      msg: "I'm taliking about the tutorial"
-    }
-  ];
+  chatItms = [];
 
   constructor(props) {
     console.log("props",props)
@@ -82,15 +33,30 @@ export default class ChatContent extends Component {
   };
 
   componentDidMount() {
+
+    const newMessagRef=ref(dbReal, "chats");
+    onChildAdded(newMessagRef, (roomSnapshot) => {
+      const roomId = roomSnapshot.key;
+      console.log("New chat room detected:", roomId);
+    
+      // Listen for messages inside this chat room
+      const roomMessagesRef = ref(dbReal, `chats/${roomId}`);
+      onChildAdded(roomMessagesRef, (messageSnapshot) => {
+        const newMessage = messageSnapshot.val();
+        console.log(`New message in ${roomId}:`, newMessage);
+      });
+    });
+
     console.log("ChildA Props:", this.props);
     this.getMessages();
     this.scrollToBottom();
   }
    timeAgo = (firebaseTimestamp) => {
+    try{
     if (!firebaseTimestamp) return "Invalid date";
 
     // Convert Firebase Timestamp to JavaScript Date
-    const date =new Date(firebaseTimestamp.seconds * 1000); //firebaseTimestamp instanceof Timestamp ? firebaseTimestamp.toDate() : new Date(firebaseTimestamp);
+    const date =new Date(firebaseTimestamp); //firebaseTimestamp instanceof Timestamp ? firebaseTimestamp.toDate() : new Date(firebaseTimestamp);
     
     if (!date) {
         console.error("timeAgo function was called without a date!");
@@ -98,6 +64,9 @@ export default class ChatContent extends Component {
     } 
    return  formatDistanceToNow(date, { addSuffix: true })
    .replace("about","").replace("in","").replace("less than a mute ago","just now").replace("mutes","minutes");
+  } catch(e){
+return "Invalid Date/time";
+  }
     const seconds = Math.floor((new Date() - new Date(date)) / 1000);
 
     if (seconds < 60) return "Just now";
@@ -129,10 +98,11 @@ componentDidUpdate(prevProps, prevState) {
 }
   async getMessages() {
     let chatId =await this.getChatId(this.props.data.userId,this.user._id)//
-    if(this.props.data.userId==undefined){
+    if(this.props.data.userId==undefined&&chatId.includes("undefined")){
     return;
     }
     const chatRef = ref(dbReal, "chats/"+chatId);
+    
     // Listen for real-time updates to the 'users' node
     onValue(chatRef, (snapshot) => {
       if (snapshot.exists()) {
@@ -149,13 +119,7 @@ componentDidUpdate(prevProps, prevState) {
                   _id:listId,
                   name: message.name,
                    text:message.text,
-                  time: message.createdAt?.toDate
-                  ? message.createdAt.toDate().toLocaleString("en-US", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      hour12: true,
-                    })
-                  : "Invalid Time"
+                   createdAt: message.createdAt
                  }
               )
         // ✅ Debugging logs
@@ -228,8 +192,10 @@ componentDidUpdate(prevProps, prevState) {
   };
   sendMessage=async()=>{
     if (!this.state.newMessage.trim()) return;
+
      const id1=this.user._id;
       const id2=this.props.data.userId;
+      if(id2==undefined){alert("Select user ");return;}
     let chatId =this.getChatId(id1,id2)// Unique chat ID
       const chatRef = ref(dbReal, `chats/${chatId}`);
     try {
@@ -239,7 +205,7 @@ componentDidUpdate(prevProps, prevState) {
               text: this.state.newMessage,
               senderId:this.user._id,
               name:this.user.name,
-               createdAt:serverTimestamp()
+               createdAt: Date.now()
                }); // Creates an empty list node
             console.log("New  message created:");
     } catch (error) {
@@ -288,7 +254,7 @@ componentDidUpdate(prevProps, prevState) {
                   key={itm._id}
                   user={itm.senderId!=this.user._id? "other" : "me"}
                   msg={itm.text}
-                  time={this.timeAgo(itm.createdAt)||"notime"}
+                  time={this.timeAgo(itm.createdAt)||"Invalid time"}
                   image={"https://www.shutterstock.com/image-photo/passport-photo-portrait-young-man-260nw-2437772333.jpg"}
                 />
               );

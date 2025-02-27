@@ -6,8 +6,9 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { dbReal } from "../firebase";
-import { ref,get,push,set, onValue, serverTimestamp } from "firebase/database";
+import { ref,get,push,set, onValue, serverTimestamp,onChildAdded  } from "firebase/database";
 import { v4 as uuidv4 } from 'uuid';
+import Badge from 'react-bootstrap/Badge';
 
 export default class ChatList extends Component {
   onlineusers =[];
@@ -16,13 +17,15 @@ export default class ChatList extends Component {
    
   ];
   constructor(props) {
+    const mewMessagesRef = ref(dbReal, "chats"); // Adjust "messages" to your database path
     super(props);
     this.state = {
       onlineusers: [],
       allChats: this.allChatUsers,
-      selectedUser: "novalue",
+      selectedUser: "no value",
     };
     this.goToChatRoom = this.goToChatRoom.bind(this);
+    
   }
   componentDidMount() {
     this.listenForAllUsers();
@@ -117,7 +120,8 @@ export default class ChatList extends Component {
                 <li className={ `d-flex align-items-center p-2 rounded hover-bg-light ${this.state.selectedUser === user.userId ? "activeuser" : ""}`} onClick={() => this.goToChatRoom(user.userId,user)} key={index}>
                   <img src={user.img} alt="avatar" className="rounded-circle me-3" width="40" height="40" />
                   <div>
-                    <div className="fw-bold">{this.userid==user.userId?"You":user.name}</div>
+                    <div className="fw-bold">{this.userid==user.userId?"You":user.name}<Badge className="ms-2" bg="info">new</Badge>
+</div>
                     <div className="text-muted small">
                       <i className={`fa fa-circle ${user.status === "online" ? "text-success" : "text-danger"} me-1`}></i>
                       {user.time || user.status}

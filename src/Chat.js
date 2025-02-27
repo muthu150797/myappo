@@ -8,6 +8,7 @@ import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from 
 import ChatContent from "./ChatContent/ChatContent";
 import ChatList from "./ChatList/ChatList";
 import "./Chat.css";
+import { requestNotificationPermission, onMessageListener } from "./firebase";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -18,9 +19,9 @@ const Chat = () => {
   const [childData, setChildData] = useState([]);
 
   useEffect(( ) => {
+    requestNotificationPermission();
     const userdata = JSON.parse(localStorage.getItem("user"));
     setUser(userdata);
-  
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   
     const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
