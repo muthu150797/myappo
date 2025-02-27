@@ -281,7 +281,7 @@ componentDidUpdate(prevProps, prevState) {
         </div>
         <div className="content__body scrollContainer">
           <div className="chat__items content">
-            {this.state.messages.map((itm, index) => {
+            {this.messages.map((itm, index) => {
               return (
                 <ChatItem
                   animationDelay={index + 2}
