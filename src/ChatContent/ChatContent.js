@@ -206,7 +206,6 @@ componentDidUpdate(prevProps, prevState) {
         });
   
         this.setState({ messages: messageList });
-        this.setState({ messages: messageList });
         this.messages=messageList
         // ✅ Debugging logs
         console.log("Fetched Messages:", this.messages);
@@ -282,7 +281,7 @@ componentDidUpdate(prevProps, prevState) {
         </div>
         <div className="content__body scrollContainer">
           <div className="chat__items content">
-            {this.messages.map((itm, index) => {
+            {this.state.messages.map((itm, index) => {
               return (
                 <ChatItem
                   animationDelay={index + 2}
