@@ -138,7 +138,7 @@ componentDidUpdate(prevProps, prevState) {
       if (snapshot.exists()) {
         const usersDatas = snapshot.val();
         console.log("All users Data:", usersDatas);
-         this.onlineusers=[];
+        this.messages=[];
         if(usersDatas!=null){
           Object.entries(usersDatas).forEach(([listId, message]) => {
             console.log("message",message)
