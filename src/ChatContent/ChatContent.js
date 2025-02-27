@@ -132,7 +132,6 @@ componentDidUpdate(prevProps, prevState) {
     if(this.props.data.userId==undefined){
     return;
     }
-    alert(chatId)
     const chatRef = ref(dbReal, "chats/"+chatId);
     // Listen for real-time updates to the 'users' node
     onValue(chatRef, (snapshot) => {
@@ -141,13 +140,13 @@ componentDidUpdate(prevProps, prevState) {
         console.log("All users Data:", usersDatas);
          this.onlineusers=[];
         if(usersDatas!=null){
-          Object.entries(usersDatas).forEach(([listId, mesagelist]) => {
-            Object.entries(mesagelist).forEach(([chatID ,message]) => {
-              console.log("message",message)
+          Object.entries(usersDatas).forEach(([listId, message]) => {
+            console.log("message",message)
+            //Object.entries(mesagelist).forEach(([chatID ,message]) => {
               this.messages.push(
                 { 
-                  userId:message.senderId,
-                  _id:chatID,
+                  senderId:message.senderId,
+                  _id:listId,
                   name: message.name,
                    text:message.text,
                   time: message.createdAt?.toDate
@@ -160,7 +159,7 @@ componentDidUpdate(prevProps, prevState) {
                  }
               )
         // ✅ Debugging logs
-            })
+           // })
           });
           console.log("Fetched Messages:", this.messages);
           this.setState((prevState) => ({
@@ -241,7 +240,7 @@ componentDidUpdate(prevProps, prevState) {
               text: this.state.newMessage,
               senderId:this.user._id,
               name:this.user.name,
-               createdAt:serverTimestamp(),
+               createdAt:serverTimestamp()
                }); // Creates an empty list node
             console.log("New  message created:");
     } catch (error) {
@@ -288,9 +287,9 @@ componentDidUpdate(prevProps, prevState) {
                 <ChatItem
                   animationDelay={index + 2}
                   key={itm._id}
-                  user={itm.senderId!=this.user._id ? "other" : "me"}
+                  user={itm.senderId!=this.user._id? "other" : "me"}
                   msg={itm.text}
-                  time={this.timeAgo(itm.createdAt)}
+                  time={this.timeAgo(itm.createdAt)||"notime"}
                   image={"https://www.shutterstock.com/image-photo/passport-photo-portrait-young-man-260nw-2437772333.jpg"}
                 />
               );
