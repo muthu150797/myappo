@@ -36,12 +36,7 @@ export const requestNotificationPermission = async () => {
 };
 
 // Listen for incoming messages
-export const onMessageListener = () =>
-console.log("Listening new messages");
-  new Promise((resolve) => {
-      onMessage(messaging, (payload) => {
-          alert("Message received:");
-          console.log("Message received:", payload);
-          resolve(payload);
-      });
-  });
+
+onMessage(messaging, (payload) => {
+  console.log("Message received in foreground:", payload);
+});
