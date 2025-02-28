@@ -47,19 +47,20 @@ export default function App() {
       navigator.serviceWorker
         .register("/firebase-messaging-sw.js")
         .then((registration) => {
-          console.log("Service Worker registered:", registration);
+          console.log("Service Worker registered2:", registration);
         })
         .catch((error) => {
-          console.error("Service Worker registration failed:", error);
+          console.error("Service Worker registration failed2:", error);
         });
     }
 
     // Handle foreground messages
     onMessage(messaging, (payload) => {
-      console.log("Foreground notification received:", payload);
+      alert("Foreground notification received2")
+      console.log("Foreground notification received2:", payload);
       new Notification(payload.notification.title, {
         body: payload.notification.body,
-        icon: "/logo192.png",
+        //icon: "/logo192.png",
       });
     });
   }, []);
