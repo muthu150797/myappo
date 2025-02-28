@@ -31,6 +31,7 @@ import ChangePassword from './ChangePassword.js';
 import MyMap from './MyMap.js';
 import Chat from './Chat.js';
 import { initializeApp } from "firebase/app";
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 import {config} from "./firebase.js"
 const app = initializeApp(config);
