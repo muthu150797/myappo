@@ -30,13 +30,39 @@ import Layout from './Layout.jsx';
 import ChangePassword from './ChangePassword.js';
 import MyMap from './MyMap.js';
 import Chat from './Chat.js';
+import { initializeApp } from "firebase/app";
+
+import {config} from "./firebase.js"
+const app = initializeApp(config);
+const messaging = getMessaging(app);
+
 export default function App() {
   const [isLogin, Login] = useState(false);
   const [code, setCode] = useState(`function Test () { return "hello"}`);
   // const { token, setToken } = useToken();
   const { count, setCount } = useState(1);
   const [token, setToken] = useState(() => localStorage.getItem('token'));
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/firebase-messaging-sw.js")
+        .then((registration) => {
+          console.log("Service Worker registered:", registration);
+        })
+        .catch((error) => {
+          console.error("Service Worker registration failed:", error);
+        });
+    }
 
+    // Handle foreground messages
+    onMessage(messaging, (payload) => {
+      console.log("Foreground notification received:", payload);
+      new Notification(payload.notification.title, {
+        body: payload.notification.body,
+        icon: "/logo192.png",
+      });
+    });
+  }, []);
   // return (
   //   <div>{token ? <Dashboard /> : <LoginComponent username="muthu" />}</div>
   // );
