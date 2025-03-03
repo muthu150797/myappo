@@ -17,6 +17,8 @@ const Chat = () => {
   const messagesEndRef = useRef(null);
   const [user, setUser] = useState([]);
   const [childData, setChildData] = useState([]);
+  const [newMessageRead, setNewMessageRead] = useState([]);
+  const childRef = useRef();
 
   useEffect(( ) => {
     requestNotificationPermission();
@@ -58,11 +60,13 @@ const Chat = () => {
       username: username, // Use entered username instead of authentication
     });
   };
-
+const callUsers=async()=>{
+  childRef.current.loadUsers(); // Calling child method
+}
   return (
     <div className="main__chatbody">
-        <ChatList  onSendData={setChildData} />
-        <ChatContent data={childData}  />
+        <ChatList  ref={childRef} onSendData={setChildData} />
+        <ChatContent  getUserLoad={callUsers} data={childData}  />
       </div>
     // <Card className="w-50 mx-auto mt-4 shadow-lg bg-white">
     //   <Card.Body className="d-flex flex-column" style={{ height: "500px" }}>

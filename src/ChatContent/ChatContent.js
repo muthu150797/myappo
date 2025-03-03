@@ -1,10 +1,10 @@
 import React, { Component, createRef, useEffect } from "react";
-import { db,dbReal } from "../firebase"
+import { db, dbReal } from "../firebase"
 import { collection, addDoc, query, orderBy, onSnapshot } from "firebase/firestore";
 import { Timestamp } from "firebase/firestore";
 import { formatDistanceToNow } from 'date-fns';
-import { ref,get,push,set,serverTimestamp, onValue,onChildAdded, update } from "firebase/database";
-import {getChatId} from "../ChatList/ChatList"
+import { ref, get, push, set, serverTimestamp, onValue, onChildAdded, update } from "firebase/database";
+import { getChatId } from "../ChatList/ChatList"
 import "./ChatContent.css";
 import Avatar from "../ChatList/Avatar";
 import ChatItem from "./ChatItem";
@@ -12,118 +12,89 @@ import ChatList from "../ChatList/ChatList";
 
 export default class ChatContent extends Component {
   messagesEndRef = createRef(null);
-   user=[];
-    messages = [];
+  user = [];
+  messages = [];
   chatItms = [];
 
   constructor(props) {
-    console.log("props",props)
+    console.log("props", props)
     super(props);
     this.state = {
       chat: this.chatItms,
-      newMessage:"",
+      newMessage: "",
       msg: ""
     };
     const userdata = JSON.parse(localStorage.getItem("user"));
-    this.user=userdata;
+    this.user = userdata;
   }
-  
+
   scrollToBottom = () => {
     this.messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
   componentDidMount() {
 
-    const newMessagRef=ref(dbReal, "chats");
-    onChildAdded(newMessagRef, (roomSnapshot) => {
-      const roomId = roomSnapshot.key;
-      console.log("New chat room detected:", roomId);
-    
-      // Listen for messages inside this chat room
-      const roomMessagesRef = ref(dbReal, `chats/${roomId}`);
-      onChildAdded(roomMessagesRef, (messageSnapshot) => {
-        const newMessage = messageSnapshot.val();
-        console.log(`New message in ${roomId}:`, newMessage);
-      });
-    });
+
 
     console.log("ChildA Props:", this.props);
     this.getMessages();
     this.scrollToBottom();
   }
-   timeAgo = (firebaseTimestamp) => {
-    try{
-    if (!firebaseTimestamp) return "Invalid date";
+  timeAgo = (firebaseTimestamp) => {
+    try {
+      if (!firebaseTimestamp) return "Invalid date";
 
-    // Convert Firebase Timestamp to JavaScript Date
-    const date =new Date(firebaseTimestamp); //firebaseTimestamp instanceof Timestamp ? firebaseTimestamp.toDate() : new Date(firebaseTimestamp);
-    
-    if (!date) {
+      // Convert Firebase Timestamp to JavaScript Date
+      const date = new Date(firebaseTimestamp); //firebaseTimestamp instanceof Timestamp ? firebaseTimestamp.toDate() : new Date(firebaseTimestamp);
+
+      if (!date) {
         console.error("timeAgo function was called without a date!");
         return "Invalid date";
-    } 
-   return  formatDistanceToNow(date, { addSuffix: true })
-   .replace("about","").replace("in","").replace("less than a mute ago","just now").replace("mutes","minutes");
-  } catch(e){
-return "Invalid Date/time";
-  }
-    const seconds = Math.floor((new Date() - new Date(date)) / 1000);
-
-    if (seconds < 60) return "Just now";
-
-    const intervals = {
-        year: 31536000,
-        month: 2592000,
-        week: 604800,
-        day: 86400,
-        hour: 3600,
-        minute: 60,
-    };
-
-    for (let unit in intervals) {
-        const count = Math.floor(seconds / intervals[unit]);
-        if (count >= 1) {
-            return `${count} ${unit}${count > 1 ? "s" : ""} ago`;
-        }
+      }
+      return formatDistanceToNow(date, { addSuffix: true })
+        .replace("about", "").replace("in", "").replace("less than a mute ago", "just now").replace("mutes", "minutes");
+    } catch (e) {
+      return "Invalid Date/time";
     }
-};
-componentDidUpdate(prevProps, prevState) {
-  console.log("prevProps values:", this.props);
-  console.log("probs current", this.props);
-  if (prevProps.data.userId != this.props.data.userId) {
-    console.log(`Prop changed from ${prevProps.data.userId} to ${this.props.data.userId}`);
-    this.getMessages();
+
+  };
+  componentDidUpdate(prevProps, prevState) {
+    console.log("prevProps values:", this.props);
+    console.log("probs current", this.props);
+    if (prevProps.data.userId != this.props.data.userId) {
+      console.log(`Prop changed from ${prevProps.data.userId} to ${this.props.data.userId}`);
+      this.getMessages();
+    }
+
   }
-  
-}
   async getMessages() {
-    let chatId =await this.getChatId(this.props.data.userId,this.user._id)//
-    if(this.props.data.userId==undefined&&chatId.includes("undefined")){
-    return;
+    let chatId = await this.getChatId(this.props.data.userId, this.user._id)//
+    if (this.props.data.userId == undefined && chatId.includes("undefined")) {
+      return;
     }
-    const chatRef = ref(dbReal, "chats/"+chatId);
-    
+    const chatRef = ref(dbReal, "chats/" + chatId);
+
     // Listen for real-time updates to the 'users' node
     onValue(chatRef, (snapshot) => {
       if (snapshot.exists()) {
         const usersDatas = snapshot.val();
         console.log("All users Data:", usersDatas);
-        this.messages=[];
-        if(usersDatas!=null){
+        this.messages = [];
+        if (usersDatas != null) {
           Object.entries(usersDatas).forEach(([listId, message]) => {
-            console.log("message",message)
+            //console.log("message", message)
             //Object.entries(mesagelist).forEach(([chatID ,message]) => {
-              this.messages.push(
-                { 
-                  senderId:message.senderId,
-                  _id:listId,
-                  name: message.name,
-                   text:message.text,
-                   createdAt: message.createdAt
-                 }
-              )
-        // ✅ Debugging logs
-           // })
+            this.messages.push(
+              {
+                senderId: message.senderId,
+                _id: listId,
+                name: message.name,
+                text: message.text,
+                createdAt: message.createdAt
+              }
+            )
+            // ✅ Debugging logs
+            // })
           });
           console.log("Fetched Messages:", this.messages);
           this.setState((prevState) => ({
@@ -132,8 +103,8 @@ componentDidUpdate(prevProps, prevState) {
           }));
 
         }
-       
-       // updateUI(usersData); // Pass data to your UI update function
+
+        // updateUI(usersData); // Pass data to your UI update function
       } else {
         this.setState((prevState) => ({
           ...prevState, // Keep other state properties unchanged
@@ -143,73 +114,40 @@ componentDidUpdate(prevProps, prevState) {
       }
     });
     this.scrollToBottom();
-    return 
-    this.scrollToBottom();
-    const userdata = JSON.parse(localStorage.getItem("user"));
-    this.setState({ user: userdata });
-  
-    console.log("User Data:", userdata);
-  
-    const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
-  
-    onSnapshot(q, (snapshot) => {
-      if (!snapshot.empty) {
-        const messageList = snapshot.docs.map((doc) => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            ...data,
-            time: data.createdAt?.toDate
-              ? data.createdAt.toDate().toLocaleString("en-US", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: true,
-                })
-              : "Invalid Time",
-          };
-        });
-  
-        this.setState({ messages: messageList });
-        this.messages=messageList
-        // ✅ Debugging logs
-        console.log("Fetched Messages:", this.messages);
-      } else {
-        console.log("No messages found in Firestore.");
-      }
-    });
-   
   }
   getChatId(userA, userB) {
     return [String(userA).trim(), String(userB).trim()].sort().join("_");
   }
-  onEnterKey=(e)=>{
+  onEnterKey = (e) => {
     if (e.key === "Enter") { // Recommended way
-       this.sendMessage();
-  }
+      this.sendMessage();
+    }
   }
   onStateChange = (e) => {
-    this.setState({ msg: e.target.value,newMessage:e.target.value });
+    this.setState({ msg: e.target.value, newMessage: e.target.value });
   };
-  sendMessage=async()=>{
+  sendMessage = async () => {
     if (!this.state.newMessage.trim()) return;
 
-     const id1=this.user._id;
-      const id2=this.props.data.userId;
-      if(id2==undefined){alert("Select user ");return;}
-    let chatId =this.getChatId(id1,id2)// Unique chat ID
-      const chatRef = ref(dbReal, `chats/${chatId}`);
+    const id1 = this.user._id;
+    const id2 = this.props.data.userId;
+    if (id2 == undefined) { alert("Select user "); return; }
+    let chatId = this.getChatId(id1, id2)// Unique chat ID
+    const chatRef = ref(dbReal, `chats/${chatId}`);
     try {
-        const snapshot = await get(chatRef);
-            // If user does not exist, create a new entry
-            await push(chatRef,  {
-              text: this.state.newMessage,
-              senderId:this.user._id,
-              name:this.user.name,
-               createdAt: Date.now()
-               }); // Creates an empty list node
-            console.log("New  message created:");
+      const snapshot = await get(chatRef);
+      // If user does not exist, create a new entry
+      await push(chatRef, {
+        text: this.state.newMessage,
+        senderId: this.user._id,
+        name: this.user.name,
+        read: false,
+        createdAt: Date.now()
+      }); // Creates an empty list node
+      console.log("New  message created:");
+      this.props.getUserLoad()
     } catch (error) {
-        console.error("Error creating/updating usermessgaes:", error);
+      console.error("Error creating/updating usermessgaes:", error);
     }
     // await addDoc(collection(db, "messages"), {
     //   text: this.state.newMessage,
@@ -219,7 +157,7 @@ componentDidUpdate(prevProps, prevState) {
     //   createdAt: serverTimestamp(),//.seconds*1000,
     //   username: "", // Use entered username instead of authentication
     // });
-    this.state.newMessage="";
+    this.state.newMessage = "";
     this.getMessages();
     this.scrollToBottom();
   };
@@ -252,9 +190,9 @@ componentDidUpdate(prevProps, prevState) {
                 <ChatItem
                   animationDelay={index + 2}
                   key={itm._id}
-                  user={itm.senderId!=this.user._id? "other" : "me"}
+                  user={itm.senderId != this.user._id ? "other" : "me"}
                   msg={itm.text}
-                  time={this.timeAgo(itm.createdAt)||"Invalid time"}
+                  time={this.timeAgo(itm.createdAt) || "Invalid time"}
                   image={"https://www.shutterstock.com/image-photo/passport-photo-portrait-young-man-260nw-2437772333.jpg"}
                 />
               );
@@ -272,8 +210,8 @@ componentDidUpdate(prevProps, prevState) {
               placeholder="Type a message here"
               onChange={this.onStateChange}
               onKeyDown={this.onEnterKey}
-              value={this.state.newMessage || ""}            />
-            <button onClick={this.sendMessage}  className="btnSendMsg" id="sendMsgBtn">
+              value={this.state.newMessage || ""} />
+            <button onClick={this.sendMessage} className="btnSendMsg" id="sendMsgBtn">
               <i className="fa fa-paper-plane"></i>
             </button>
           </div>
