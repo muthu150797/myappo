@@ -88,6 +88,9 @@ export default class ChatList extends Component {
   loadUsers(){
    this.listenForAllUsers();
   }
+  updateAllAsRead=()=>{
+
+  }
   getLoad = () => {
     const usersRef = ref(dbReal, "users");
     const newMessagRef = ref(dbReal, "chats");

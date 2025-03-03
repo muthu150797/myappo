@@ -68,12 +68,33 @@ export default class ChatContent extends Component {
 
   }
   async getMessages() {
+    this.props.getUserLoad();
     let chatId = await this.getChatId(this.props.data.userId, this.user._id)//
     if (this.props.data.userId == undefined && chatId.includes("undefined")) {
       return;
     }
     const chatRef = ref(dbReal, "chats/" + chatId);
-
+    get(chatRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        const updates = {};
+        snapshot.forEach((child) => {
+         if(this.user._id!=child.val().senderId){
+           updates[`${child.key}/read`] = true; // Set read to true
+         }
+        // console.log("updates child",child.val().senderId)
+         // updates[`${child.key}/senderId`] 
+          //updates[`${child.key}/read`] = true; // Set read to true
+        });
+       console.log("updates all read",updates)
+        update(chatRef, updates)
+          .then(() => console.log("✅ All read values updated to true"))
+          .catch((error) => console.error("❌ Update failed to all read:", error));
+      } else {
+        console.log("No data available");
+      }
+    }).catch((error) => {
+      console.error("❌ Error fetching data:", error);
+    });
     // Listen for real-time updates to the 'users' node
     onValue(chatRef, (snapshot) => {
       if (snapshot.exists()) {
@@ -127,6 +148,7 @@ export default class ChatContent extends Component {
     this.setState({ msg: e.target.value, newMessage: e.target.value });
   };
   sendMessage = async () => {
+
     if (!this.state.newMessage.trim()) return;
 
     const id1 = this.user._id;
@@ -145,6 +167,7 @@ export default class ChatContent extends Component {
         createdAt: Date.now()
       }); // Creates an empty list node
       console.log("New  message created:");
+      
       this.props.getUserLoad()
     } catch (error) {
       console.error("Error creating/updating usermessgaes:", error);
