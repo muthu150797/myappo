@@ -33,6 +33,8 @@ export default class ChatList extends Component {
 
   }
   loadUsers(){
+    alert("usrlaod");
+
    this.listenForAllUsers();
   }
   getLoad = () => {
