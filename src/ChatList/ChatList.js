@@ -23,7 +23,7 @@ export default class ChatList extends Component {
     this.state = {
       onlineusers: [],
       allChats: this.allChatUsers,
-      selectedUser: "no value",
+      selectedUser:"",
     };
     this.goToChatRoom = this.goToChatRoom.bind(this);
    // this.getLoad();
@@ -33,7 +33,6 @@ export default class ChatList extends Component {
 
   }
   loadUsers(){
-    alert("usrlaod");
 
    this.listenForAllUsers();
   }
@@ -114,7 +113,14 @@ export default class ChatList extends Component {
         if (usersData != null) {
           for (const [userId, userData] of Object.entries(usersData)) {
             let chatroomId =  await this.getChatId(userId, this.userid);
-            let unreadcount=await userId==this.state.selectedUser?0:this.getUnreadCount(chatroomId);
+            let unreadCount=0;
+            if(this.state.selectedUser==null||this.state.selectedUser==""){
+              unreadCount=this.getUnreadCount(chatroomId);
+            }
+            else{
+              unreadCount =await userId==this.state.selectedUser?0:this.getUnreadCount(chatroomId);
+            }
+          
             this.onlineusers.push(
               {
                 userId: userId,
