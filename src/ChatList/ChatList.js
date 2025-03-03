@@ -112,7 +112,7 @@ export default class ChatList extends Component {
         if (usersData != null) {
           for (const [userId, userData] of Object.entries(usersData)) {
             let chatroomId =  await this.getChatId(userId, this.userid);
-            let unreadcount=await this.getUnreadCount(chatroomId);
+            let unreadcount=await userId==this.state.selectedUser?0:this.getUnreadCount(chatroomId);
             this.onlineusers.push(
               {
                 userId: userId,
