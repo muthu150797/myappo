@@ -94,6 +94,10 @@ export default class ChatList extends Component {
     }
   }
   listenForAllUsers = async () => {
+    this.setState((prevState) => ({
+      ...prevState, // Keep other state properties unchanged
+      onlineusers: [],
+    }));
     const usersRef = ref(dbReal, "users");
     // Listen for real-time updates to the 'users' node
     onValue(usersRef, async (snapshot) => {
