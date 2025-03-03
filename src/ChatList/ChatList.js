@@ -25,6 +25,59 @@ export default class ChatList extends Component {
       allChats: this.allChatUsers,
       selectedUser:"",
     };
+    const newMessagRef = ref(dbReal, "chats");
+    const usersRef = ref(dbReal, "users");
+
+    onValue(newMessagRef, async (snapshots) => {
+      console.log("updateuser ",(await get (usersRef)).val());
+      const snapshot=await get (usersRef);
+      if (snapshot.exists()) {
+        const usersData = snapshot.val();
+        console.log("All users:", usersData);
+        this.onlineusers = [];
+        this.setState((prevState) => ({
+          ...prevState, // Keep other state properties unchanged
+          onlineusers: [],
+        }));
+        if (usersData != null) {
+          for (const [userId, userData] of Object.entries(usersData)) {
+            let chatroomId =  await this.getChatId(userId, this.userid);
+            let unreadCount=0;
+            if(this.state.selectedUser==null||this.state.selectedUser==""){
+              unreadCount= await this.getUnreadCount(chatroomId);
+            }
+            else{
+              unreadCount = userId==this.state.selectedUser?0:await this.getUnreadCount(chatroomId);
+            }
+          
+            this.onlineusers.push(
+              {
+                userId: userId,
+                name: userData.name,
+                unreadCount: unreadCount,
+                status: userData.status.state,
+                img: "https://bootdey.com/img/Content/avatar/avatar3.png"
+              }
+            )
+
+          };
+          this.setState((prevState) => ({
+            ...prevState, // Keep other state properties unchanged
+            onlineusers: [...this.onlineusers],
+          }));
+          console.log("onlineusers", this.onlineusers);
+
+        }
+
+        // updateUI(usersData); // Pass data to your UI update function
+      } else {
+        this.setState((prevState) => ({
+          ...prevState, // Keep other state properties unchanged
+          onlineusers: [],
+        }));
+        console.log("No users found");
+      }
+    });
     this.goToChatRoom = this.goToChatRoom.bind(this);
    // this.getLoad();
   }
@@ -33,7 +86,6 @@ export default class ChatList extends Component {
 
   }
   loadUsers(){
-
    this.listenForAllUsers();
   }
   getLoad = () => {
@@ -41,7 +93,7 @@ export default class ChatList extends Component {
     const newMessagRef = ref(dbReal, "chats");
     let unreadMessageCount = 0;
     off(newMessagRef, "child_added");
-
+    this.listenForAllUsers();
     // Attach listener for chat rooms
     onChildAdded(newMessagRef, async (roomSnapshot) => {
       const roomId = roomSnapshot.key;
@@ -52,22 +104,22 @@ export default class ChatList extends Component {
       off(roomMessagesRef, "child_added");
       // Attach listener for new messagessnapshotUser.forEach((messageSnapshot) => {
       let newMessageList = []
-
+    
       onChildAdded(roomMessagesRef, async (messageSnapshot) => {
         newMessageList = messageSnapshot.val();
         const snapshotUser = await this.getNewMsg(usersRef);
         if (snapshotUser.exists()) {
           Object.entries(snapshotUser.val()).forEach(([userId, userData]) => {
             if (userId == newMessageList.senderId) {
-              this.onlineusers.push(
-                {
-                  userId: userId,
-                  name: userData.name,
-                  unreadCount: 0,
-                  status: userData.status.state,
-                  img: "https://bootdey.com/img/Content/avatar/avatar3.png"
-                }
-              )
+              // this.onlineusers.push(
+              //   {
+              //     userId: userId,
+              //     name: userData.name,
+              //     unreadCount: 0,
+              //     status: userData.status.state,
+              //     img: "https://bootdey.com/img/Content/avatar/avatar3.png"
+              //   }
+              // )
             }
 
           })
