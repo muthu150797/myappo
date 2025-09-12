@@ -6,6 +6,7 @@ function PredictGlass() {
   const [result, setResult] = useState(null);
 
   const capture = async () => {
+    alert();
     const imageSrc = webcamRef.current.getScreenshot();
 
     // Convert base64 → Blob
@@ -16,7 +17,7 @@ function PredictGlass() {
     formData.append("file", blob, "capture.jpg");
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/predict", {
+      const response = await fetch("https://dockertest-pgan.onrender.com/predictGlass", {
         method: "POST",
         body: formData,
       });
