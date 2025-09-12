@@ -24,8 +24,10 @@ function PredictGlass() {
 
       const data = await response.json();
       console.log("Prediction result:", data);
+      alert(data);
       setResult(data);
     } catch (err) {
+        alert(err);
       console.error("Upload failed", err);
     }
   };
