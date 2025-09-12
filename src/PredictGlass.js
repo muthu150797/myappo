@@ -1,0 +1,51 @@
+import React, { useRef, useState } from "react";
+import Webcam from "react-webcam";
+
+function PredictGlass() {
+  const webcamRef = useRef(null);
+  const [result, setResult] = useState(null);
+
+  const capture = async () => {
+    const imageSrc = webcamRef.current.getScreenshot();
+
+    // Convert base64 → Blob
+    const res = await fetch(imageSrc);
+    const blob = await res.blob();
+
+    const formData = new FormData();
+    formData.append("file", blob, "capture.jpg");
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/predict", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+      console.log("Prediction result:", data);
+      setResult(data);
+    } catch (err) {
+      console.error("Upload failed", err);
+    }
+  };
+
+  return (
+    <div>
+      <Webcam
+        ref={webcamRef}
+        screenshotFormat="image/jpeg"
+        width={400}
+        height={300}
+      />
+      <button onClick={capture}>Capture & Detect</button>
+
+      {result && (
+        <pre style={{ marginTop: "20px" }}>
+          {JSON.stringify(result, null, 2)}
+        </pre>
+      )}
+    </div>
+  );
+}
+
+export default PredictGlass;

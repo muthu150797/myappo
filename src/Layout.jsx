@@ -122,6 +122,8 @@ const Layout = () => {
         <ul>
           <li>
             <a href="#"><House /> <span>I'm map</span></a>
+            <a href="/dashboard/predict-glass"><House /> <span>Predict Glass</span></a>
+
             <ul class="nav-flyout">
               <li>
                 <a href="/dashboard/open-map"><i class="ion-ios-color-filter-outline"></i>Open Map</a>

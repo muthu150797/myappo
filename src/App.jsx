@@ -34,6 +34,7 @@ import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 import {config} from "./firebase.js"
+import PredictGlass from './PredictGlass.js';
 const app = initializeApp(config);
 const messaging = getMessaging(app);
 
@@ -93,7 +94,7 @@ export default function App() {
           <Route path="settings" element={<Settings />} />
           <Route path="open-map" element={<MyMap />} />
           <Route path="chat-with-me" element={<Chat />} />
-
+          <Route path="predict-glass" element={<PredictGlass />} />
         </Route>
         <Route
           path="/dashboard2"
