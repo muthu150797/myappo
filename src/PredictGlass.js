@@ -4,6 +4,7 @@ import Webcam from "react-webcam";
 function PredictGlass() {
   const webcamRef = useRef(null);
   const [result, setResult] = useState(null);
+  const [imageBase64, setImageBase64] = useState(null);
 
   const capture = async () => {
     const imageSrc = webcamRef.current.getScreenshot();
@@ -27,9 +28,10 @@ function PredictGlass() {
       });
   
       const data = await response.json();
-      alert("success: "+data.message);
-      console.log("Prediction result:", data);
-      //setResult(data);
+      alert("success: "+data.status);
+      console.log("Prediction result:", data.status);
+      setResult(data.status); // save status separately
+      setImageBase64(data.imageAsBase64); // save base64 image
     } catch (err) {
       console.error("Upload failed", err);
       alert("Upload failed: " + err);
@@ -46,8 +48,15 @@ function PredictGlass() {
         height={300}
       />
       <button onClick={capture}>Capture & Detect</button>
-
-      {result && (
+ {/* Show image from server */}
+ {imageBase64 && (
+        <img
+          src={`data:image/jpeg;base64,${imageBase64}`}
+          alt="Prediction Result"
+          style={{ marginTop: "20px", width: "400px" }}
+        />
+      )}
+            {result && (
         <pre style={{ marginTop: "20px" }}>
           {JSON.stringify(result, null, 2)}
         </pre>
