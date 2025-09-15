@@ -10,7 +10,6 @@ function PredictGlass() {
   
     // base64 → Blob conversion
     const byteString = atob(imageSrc.split(",")[1]);
-    alert("byteString: "+byteString);
     const mimeString = imageSrc.split(",")[0].split(":")[1].split(";")[0];
     const ab = new ArrayBuffer(byteString.length);
     const ia = new Uint8Array(ab);
@@ -21,7 +20,6 @@ function PredictGlass() {
   
     const formData = new FormData();
     formData.append("file", blob, "capture.jpg");
-  
     try {
       const response = await fetch("https://dockertest-pgan.onrender.com/predictGlass", {
         method: "POST",
@@ -29,12 +27,12 @@ function PredictGlass() {
       });
   
       const data = await response.json();
-      alert("success: "+data);
+      alert("success: "+data.message);
       console.log("Prediction result:", data);
-      setResult(data);
+      //setResult(data);
     } catch (err) {
       console.error("Upload failed", err);
-      alert("Upload failed: " + err.message);
+      alert("Upload failed: " + err);
     }
   };
   
