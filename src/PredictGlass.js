@@ -32,9 +32,8 @@ function PredictGlass() {
       const data = await response.json();
       alert("success: "+data.status);
       console.log("Prediction result:", data.status);
-      alert(data?.detections?.imageAsBase64)
       setResult(data.status); // save status separately
-      setImageBase64(data.detections.imageAsBase64); // save base64 image
+      setImageBase64(data.detections[0].imageAsBase64); // save base64 image
     } catch (err) {
       console.error("Upload failed", err);
       alert("Upload failed: " + err);
