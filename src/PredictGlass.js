@@ -10,6 +10,7 @@ function PredictGlass() {
   
     // base64 → Blob conversion
     const byteString = atob(imageSrc.split(",")[1]);
+    alert("byteString: "+byteString);
     const mimeString = imageSrc.split(",")[0].split(":")[1].split(";")[0];
     const ab = new ArrayBuffer(byteString.length);
     const ia = new Uint8Array(ab);
@@ -28,6 +29,7 @@ function PredictGlass() {
       });
   
       const data = await response.json();
+      alert("success: "+data);
       console.log("Prediction result:", data);
       setResult(data);
     } catch (err) {
