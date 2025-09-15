@@ -6,7 +6,6 @@ function PredictGlass() {
   const [result, setResult] = useState(null);
 
   const capture = async () => {
-    alert();
     const imageSrc = webcamRef.current.getScreenshot();
 
     // Convert base64 → Blob
@@ -23,9 +22,9 @@ function PredictGlass() {
       });
 
       const data = await response.json();
-      console.log("Prediction result:", data);
-      alert(data);
-      setResult(data);
+      console.log("Prediction result:", data.message);
+      alert(data.message);
+      setResult(data.message);
     } catch (err) {
         alert(err);
       console.error("Upload failed", err);
