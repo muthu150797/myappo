@@ -5,6 +5,7 @@ function PredictGlass() {
   const webcamRef = useRef(null);
   const [result, setResult] = useState(null);
   const [imageBase64, setImageBase64] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const capture = async () => {
     const imageSrc = webcamRef.current.getScreenshot();
@@ -22,6 +23,7 @@ function PredictGlass() {
     const formData = new FormData();
     formData.append("file", blob, "capture.jpg");
     try {
+      setLoading(true); // start loading
       const response = await fetch("https://dockertest-pgan.onrender.com/predictGlass", {
         method: "POST",
         body: formData,
@@ -35,6 +37,8 @@ function PredictGlass() {
     } catch (err) {
       console.error("Upload failed", err);
       alert("Upload failed: " + err);
+    }finally {
+      setLoading(false); // stop loading
     }
   };
   
@@ -47,8 +51,9 @@ function PredictGlass() {
         width={400}
         height={300}
       />
-      <button onClick={capture}>Capture & Detect</button>
- {/* Show image from server */}
+ <button onClick={capture} disabled={loading}>
+        {loading ? "Processing..." : "Capture & Detect"}
+      </button> {/* Show image from server */}
  {imageBase64 && (
         <img
           src={`data:image/jpeg;base64,${imageBase64}`}
